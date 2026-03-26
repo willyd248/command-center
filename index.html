@@ -36,10 +36,61 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .log-entry:last-child{border-bottom:none}
 a{color:var(--accent);text-decoration:none}
 .updated{color:var(--green);font-size:11px;font-weight:600}
-@media(max-width:900px){.grid-5,.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+/* Project cards — clickable */
+.project-card{cursor:pointer;transition:border-color 0.15s,transform 0.15s,box-shadow 0.15s}
+.project-card:hover{border-color:rgba(77,142,255,0.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+/* View transitions */
+#main-view,#detail-view{transition:opacity 0.2s ease,transform 0.2s ease}
+.view-hidden{opacity:0;pointer-events:none;height:0;overflow:hidden;transform:translateX(12px)}
+.view-visible{opacity:1;transform:translateX(0)}
+/* Detail view styles */
+.detail-header{display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:28px;flex-wrap:wrap}
+.back-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all 0.15s;flex-shrink:0}
+.back-btn:hover{border-color:var(--accent);color:var(--text)}
+.detail-title{font-size:26px;font-weight:800}
+.detail-live-link{font-size:12px;padding:4px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px}
+/* Pipeline tracker */
+.pipeline{display:flex;align-items:center;gap:0;margin-bottom:8px;overflow-x:auto;padding-bottom:4px}
+.pipeline-phase{flex:1;min-width:120px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);text-align:center;font-size:11px;font-weight:600;color:var(--muted);position:relative;transition:all 0.2s}
+.pipeline-phase:first-child{border-radius:8px 0 0 8px}
+.pipeline-phase:last-child{border-radius:0 8px 8px 0}
+.pipeline-phase.past{color:var(--green);border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.06)}
+.pipeline-phase.current{color:var(--text);border-color:var(--accent);background:rgba(77,142,255,0.12);box-shadow:0 0 0 1px var(--accent)}
+.pipeline-phase .phase-num{font-size:9px;font-weight:700;margin-bottom:2px;opacity:0.6}
+.phase-progress{height:3px;border-radius:2px;background:var(--border);margin-top:4px;overflow:hidden}
+.phase-progress-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.6s ease}
+/* Feature checklist */
+.feature-list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.feature-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;background:var(--bg);font-size:12px}
+.feature-item.done{color:var(--text)}
+.feature-item.todo{color:var(--muted)}
+.check-icon{width:16px;height:16px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.check-icon.done{background:rgba(34,197,94,0.2);color:var(--green)}
+.check-icon.todo{background:rgba(148,163,184,0.1);border:1px solid var(--border);color:transparent}
+/* Deployment info grid */
+.deploy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.deploy-item{padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+.deploy-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.deploy-value{font-size:12px;font-weight:600}
+/* Revenue row */
+.rev-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rev-item{padding:14px;background:var(--bg);border-radius:8px;border:1px solid var(--border);text-align:center}
+.rev-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.rev-value{font-size:22px;font-weight:800}
+/* Section headers inside detail */
+.detail-section{margin-bottom:28px}
+.detail-section h3{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+/* Stack tags */
+.stack-list{display:flex;flex-wrap:wrap;gap:6px}
+@media(max-width:900px){.grid-5,.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.deploy-grid{grid-template-columns:1fr}.rev-row{grid-template-columns:1fr}}
+@media(max-width:600px){body{padding:16px}.pipeline{flex-direction:column}.pipeline-phase{border-radius:0;border-left-color:var(--border);width:100%;text-align:left;display:flex;align-items:center;gap:8px}.pipeline-phase:first-child{border-radius:8px 8px 0 0}.pipeline-phase:last-child{border-radius:0 0 8px 8px}}
 </style>
 </head>
 <body>
+
+<!-- ── MAIN VIEW ── -->
+<div id="main-view" class="view-visible">
+
 <div class="header">
 <div>
 <h1>Portfolio Command Center</h1>
@@ -48,39 +99,31 @@ a{color:var(--accent);text-decoration:none}
 <div><div class="clock" id="clock"></div><div class="clock-date" id="clockDate"></div><div class="updated">Last updated: <span id="lastUpdated"></span></div></div>
 </div>
 
-<!-- OUTCOMES -->
 <h2>Outcome Scorecard</h2>
 <div class="grid-5" id="outcomes"></div>
 
-<!-- PROJECTS -->
-<h2>Projects</h2>
+<h2>Portfolio Pulse <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:4px">— click a project to explore</span></h2>
 <div class="grid-2" id="projects"></div>
 
-<!-- COSTS -->
 <h2>API Cost Tracker</h2>
 <div style="margin-bottom:16px"><span class="cost-badge">HARD LIMIT: $50/mo external costs (excl. Anthropic)</span> <span style="font-size:24px;font-weight:800;color:var(--green);margin-left:12px">$4.20 <span style="font-size:14px;color:var(--muted);font-weight:400">/ $50.00</span></span></div>
 <div class="card"><table><thead><tr><th>Project</th><th>Service</th><th>Monthly Cost</th><th>Status</th></tr></thead><tbody id="costTable"></tbody></table></div>
 
-<!-- GO/NO-GO -->
 <h2>Go/No-Go Evaluator</h2>
 <div class="grid-2">
 <div class="card"><div id="sliders"></div><div class="verdict-box"><div style="font-size:48px;font-weight:900" id="vScore">15</div><div style="font-size:20px;font-weight:800;margin-top:4px" id="vLabel">CONDITIONAL</div><div style="font-size:11px;color:var(--muted);margin-top:4px" id="vHint"></div></div></div>
 <div class="card"><canvas id="radarChart" height="280"></canvas><div style="background:var(--bg);border-radius:8px;padding:12px;margin-top:12px"><div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:6px">Decision Pipeline</div><div style="font-size:11px;color:var(--muted)">Market Research → Competitor Analysis → MVP Scope → Security Baseline → Analytics Plan → Build</div></div></div>
 </div>
 
-<!-- PRIORITY QUEUE -->
 <h2>Priority Queue — Revenue + Users Focus</h2>
 <div class="card" style="padding:0;overflow:hidden" id="priorityQ"></div>
 
-<!-- OPS LOG -->
 <h2>Operations Log</h2>
 <div class="card" id="opsLog"></div>
 
-<!-- SECURITY -->
 <h2>Security Compliance</h2>
 <div class="card" style="overflow-x:auto"><table id="secTable"></table></div>
 
-<!-- REVENUE -->
 <h2>Revenue Dashboard</h2>
 <div class="grid-4" id="revCards"></div>
 <div class="card" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
@@ -88,14 +131,143 @@ a{color:var(--accent);text-decoration:none}
 <div style="text-align:right"><div style="font-size:12px;color:var(--muted)">Monthly costs: <span style="color:var(--text);font-weight:600">$4.20</span></div><div style="font-size:12px;color:var(--muted)">Net: <span style="color:var(--red);font-weight:600">-$4.20</span></div></div>
 </div>
 
+</div><!-- /main-view -->
+
+<!-- ── DETAIL VIEW ── -->
+<div id="detail-view" class="view-hidden" style="min-height:100vh"></div>
+
 <script>
+// ─────────────────────────────────────────────
+// PROJECT DATA
+// ─────────────────────────────────────────────
+const DATA = {
+  trackr: {
+    name: 'Trackr', slug: 'trackr', tag: 'AI Job Application Tracker',
+    color: '#4D8EFF', status: 'deploying', url: 'https://trackr-ivfg.vercel.app',
+    pipeline: { phases: ['Validate','Build MVP','Launch & Measure','Scale or Kill'], current: 1, completion: 75 },
+    features: [
+      {label:'User authentication (Clerk)', done:true},
+      {label:'Job application tracking', done:true},
+      {label:'Gmail ingestion (AI parsing)', done:true},
+      {label:'Stripe payment integration', done:true},
+      {label:'Chrome extension built', done:true},
+      {label:'Production env vars configured', done:false},
+      {label:'Stripe live mode (test mode only)', done:false},
+      {label:'Analytics integration', done:false},
+      {label:'Chrome extension tested & published', done:false},
+      {label:'CI/CD pipeline', done:false}
+    ],
+    deployment: {
+      frontend: {platform:'Vercel', url:'https://trackr-ivfg.vercel.app'},
+      backend: {platform:'Railway', url:'(set RAILWAY_URL)'},
+      lastDeploy: 'Mar 25, 2026', autoDeploy: true
+    },
+    tasks: [
+      {rank:1, action:'Set production env vars on Railway (CORS_ORIGIN, GOOGLE_REDIRECT_URI)', effort:'30min', impact:'Critical'},
+      {rank:4, action:'Create Stripe product in live mode + update env vars for real payments', effort:'30min', impact:'High'},
+      {rank:8, action:'Build ghost job detection feature (top user request from market research)', effort:'6hrs', impact:'Medium'}
+    ],
+    revenue: { mrr:'$0', users:'0', analytics:{enabled:false, platform:null} },
+    stack: ['React','Express','Neon Postgres','Clerk Auth','Stripe','Railway','Vercel']
+  },
+  onset: {
+    name: 'Onset', slug: 'onset', tag: 'Duolingo for DJs',
+    color: '#A855F7', status: 'live', url: 'https://onsetdj.com',
+    pipeline: { phases: ['Validate','Build MVP','Launch & Measure','Scale or Kill'], current: 2, completion: 30 },
+    features: [
+      {label:'Landing page (onsetdj.com)', done:true},
+      {label:'Email capture (Resend)', done:true},
+      {label:'Core DJ lessons (Web Audio API)', done:true},
+      {label:'MIDI controller support', done:true},
+      {label:'Vercel Analytics', done:true},
+      {label:'User authentication (Supabase)', done:false},
+      {label:'Cross-device progress sync', done:false},
+      {label:'Payment/subscription flow', done:false},
+      {label:'Demo video', done:false},
+      {label:'Product analytics (user-level)', done:false}
+    ],
+    deployment: {
+      frontend: {platform:'Vercel', url:'https://onsetdj.com'},
+      backend: {platform:'N/A', url:null},
+      lastDeploy: 'Mar 25, 2026', autoDeploy: true
+    },
+    tasks: [
+      {rank:2, action:'Set Supabase env vars on Vercel so auth works in production', effort:'15min', impact:'Critical'},
+      {rank:5, action:'Replace affiliate link placeholders with real Hercules Amazon affiliate IDs', effort:'15min', impact:'High'},
+      {rank:7, action:'Add Pioneer DDJ-FLX4 controller support (10x addressable market)', effort:'4hrs', impact:'High'}
+    ],
+    revenue: { mrr:'$0', users:'unknown', analytics:{enabled:true, platform:'Vercel Analytics'} },
+    stack: ['Vanilla JS','Vite','Web Audio API','Supabase','Resend','Vercel']
+  },
+  polititrack: {
+    name: 'PolitiTrack', slug: 'polititrack', tag: 'Congress Transparency Tool',
+    color: '#22C55E', status: 'live', url: 'https://polititrack-chi.vercel.app',
+    pipeline: { phases: ['Validate','Build MVP','Launch & Measure','Scale or Kill'], current: 2, completion: 20 },
+    features: [
+      {label:'Congress member profiles', done:true},
+      {label:'Senate voting records', done:true},
+      {label:'Bill tracking', done:true},
+      {label:'Vercel Analytics', done:true},
+      {label:'Auto-deploy from main', done:true},
+      {label:'House voting records', done:false},
+      {label:'Complete FEC financial data', done:false},
+      {label:'Fix localhost in SITE_URL', done:false},
+      {label:'Monetization strategy', done:false},
+      {label:'API key rotation (security)', done:false}
+    ],
+    deployment: {
+      frontend: {platform:'Vercel', url:'https://polititrack-chi.vercel.app'},
+      backend: {platform:'N/A', url:null},
+      lastDeploy: 'Mar 25, 2026', autoDeploy: true
+    },
+    tasks: [
+      {rank:3, action:'Rotate exposed API keys on Congress.gov and OpenFEC provider sites', effort:'15min', impact:'Critical'},
+      {rank:10, action:'Build SEO content pages for "who is my representative" queries', effort:'4hrs', impact:'Medium'}
+    ],
+    revenue: { mrr:'$0', users:'unknown', analytics:{enabled:true, platform:'Vercel Analytics'} },
+    stack: ['Next.js 16','React 19','TypeScript','Congress.gov API','OpenFEC API','Vercel']
+  },
+  'sdr-copilot': {
+    name: 'SDR Copilot', slug: 'sdr-copilot', tag: 'AI Cold Call Coaching',
+    color: '#F97316', status: 'not deployed', url: null,
+    pipeline: { phases: ['Validate','Build MVP','Launch & Measure','Scale or Kill'], current: 1, completion: 40 },
+    features: [
+      {label:'Chrome extension scaffold (MV3)', done:true},
+      {label:'Deepgram transcription integration', done:true},
+      {label:'Demo mode working', done:true},
+      {label:'GitHub repo (v1.1.0)', done:true},
+      {label:'Real-time audio relay (broken)', done:false},
+      {label:'Google OAuth (placeholder)', done:false},
+      {label:'Gmail draft integration', done:false},
+      {label:'Salesforce integration', done:false},
+      {label:'Chrome Web Store publish', done:false},
+      {label:'Analytics/telemetry', done:false}
+    ],
+    deployment: {
+      frontend: {platform:'Not deployed', url:null},
+      backend: {platform:'N/A', url:null},
+      lastDeploy: null, autoDeploy: false
+    },
+    tasks: [
+      {rank:9, action:'Test against real Orum account + submit to Chrome Web Store', effort:'3hrs', impact:'Medium'}
+    ],
+    revenue: { mrr:'$0', users:'0', analytics:{enabled:false, platform:null} },
+    stack: ['Chrome MV3','Deepgram','Google OAuth','Vanilla JS']
+  }
+};
+
+// ─────────────────────────────────────────────
+// COLORS + HELPERS
+// ─────────────────────────────────────────────
 const C={bg:'#0F1117',card:'#1A1D27',accent:'#4D8EFF',green:'#22C55E',yellow:'#EAB308',red:'#EF4444',orange:'#F97316',text:'#E2E8F0',muted:'#94A3B8',trackr:'#4D8EFF',onset:'#A855F7',polititrack:'#22C55E',sdr:'#F97316'};
 const pC={Trackr:C.trackr,Onset:C.onset,PolitiTrack:C.polititrack,'SDR Copilot':C.sdr,All:C.accent};
 function sC(s,m=100){const p=(s/m)*100;return p>=70?C.green:p>=40?C.yellow:C.red}
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString();document.getElementById('clockDate').textContent=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});document.getElementById('lastUpdated').textContent='March 25, 2026 12:30 PM ET'}
 setInterval(updateClock,1000);updateClock();
 
-// OUTCOMES - UPDATED with real status
+// ─────────────────────────────────────────────
+// OUTCOMES
+// ─────────────────────────────────────────────
 const outcomes=[
 {name:'Safety',score:55,trend:'up',summary:'PolitiTrack keys need rotation. Privacy policies deployed to all 4 projects. .gitignore fixed.'},
 {name:'Data Security',score:50,trend:'up',summary:'Supabase auth added to Onset. Clerk auth on Trackr. Salesforce secret moved to local storage.'},
@@ -105,19 +277,23 @@ const outcomes=[
 ];
 document.getElementById('outcomes').innerHTML=outcomes.map(o=>`<div class="card" style="text-align:center"><div style="font-size:13px;font-weight:600;margin-bottom:4px">${o.name}</div><div class="score" style="color:${sC(o.score)}">${o.score}</div><div style="font-size:11px;color:${o.trend==='up'?C.green:C.muted};margin:4px 0">${o.trend==='up'?'↗':'→'} ${o.trend}</div><div style="font-size:10px;color:var(--muted);line-height:1.4">${o.summary}</div></div>`).join('');
 
-// PROJECTS - UPDATED with real status
+// ─────────────────────────────────────────────
+// PROJECT CARDS (clickable)
+// ─────────────────────────────────────────────
 const projects=[
-{name:'Trackr',tag:'AI Job Application Tracker',stack:['React','Express','Neon','Clerk','Stripe'],hp:8,ho:5,status:'deploying',url:'https://trackr-ivfg.vercel.app',next:'Set production env vars on Railway (CORS, OAuth redirect)',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:1,privacy:1,stripe:1}},
-{name:'Onset',tag:'Duolingo for DJs',stack:['Vanilla JS','Vite','Web Audio','Supabase'],hp:9,ho:6,status:'live',url:'https://onsetdj.com',next:'Verify Supabase env vars on Vercel for production auth',deadline:'Apr 7 /decide (13 days)',comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}},
-{name:'PolitiTrack',tag:'Congress Transparency Tool',stack:['Next.js 16','React 19','TypeScript'],hp:8,ho:6,status:'live',url:'https://polititrack-chi.vercel.app',next:'Rotate API keys on Congress.gov + OpenFEC',deadline:null,comp:{auth:0,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}},
-{name:'SDR Copilot',tag:'AI Cold Call Coaching',stack:['Chrome MV3','Deepgram','Google OAuth'],hp:6,ho:4,status:'not deployed',url:null,next:'Test against real Orum account, then submit to Chrome Web Store',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}}
+{name:'Trackr',tag:'AI Job Application Tracker',stack:['React','Express','Neon','Clerk','Stripe'],hp:8,ho:5,status:'deploying',url:'https://trackr-ivfg.vercel.app',next:'Set production env vars on Railway (CORS, OAuth redirect)',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:1,privacy:1,stripe:1},slug:'trackr'},
+{name:'Onset',tag:'Duolingo for DJs',stack:['Vanilla JS','Vite','Web Audio','Supabase'],hp:9,ho:6,status:'live',url:'https://onsetdj.com',next:'Verify Supabase env vars on Vercel for production auth',deadline:'Apr 7 /decide (13 days)',comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0},slug:'onset'},
+{name:'PolitiTrack',tag:'Congress Transparency Tool',stack:['Next.js 16','React 19','TypeScript'],hp:8,ho:6,status:'live',url:'https://polititrack-chi.vercel.app',next:'Rotate API keys on Congress.gov + OpenFEC',deadline:null,comp:{auth:0,validation:0,https:1,rateLimit:0,privacy:1,stripe:0},slug:'polititrack'},
+{name:'SDR Copilot',tag:'AI Cold Call Coaching',stack:['Chrome MV3','Deepgram','Google OAuth'],hp:6,ho:4,status:'not deployed',url:null,next:'Test against real Orum account, then submit to Chrome Web Store',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0},slug:'sdr-copilot'}
 ];
 const dotCls=s=>s==='live'?`background:${C.green};box-shadow:0 0 6px ${C.green}`:s==='deploying'?`background:${C.yellow};box-shadow:0 0 6px ${C.yellow}`:`background:${C.red};box-shadow:0 0 6px ${C.red}`;
 document.getElementById('projects').innerHTML=projects.map(p=>{
 const compHtml=Object.entries(p.comp).map(([k,v])=>`<span style="font-size:10px;color:${v?C.green:C.red}">${v?'✓':'✗'} ${k}</span>`).join(' ');
-return `<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:8px"><span style="width:4px;height:24px;border-radius:2px;background:${pC[p.name]};display:inline-block"></span><b style="font-size:16px">${p.name}</b>${p.deadline?`<span class="badge" style="background:${C.orange}22;color:${C.orange};border:1px solid ${C.orange}44">${p.deadline}</span>`:''}</div><div style="display:flex;align-items:center;gap:4px"><span class="dot" style="${dotCls(p.status)}"></span><span style="font-size:11px;color:var(--muted)">${p.status}</span></div></div><p style="color:var(--muted);font-size:13px;margin-bottom:10px">${p.tag}</p><div style="margin-bottom:10px">${p.stack.map(t=>`<span class="tag">${t}</span>`).join('')}</div><div style="display:flex;gap:16px;margin-bottom:10px"><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Product</div><div style="font-size:20px;font-weight:700;color:${sC(p.hp,10)}">${p.hp}/10</div></div><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Ops</div><div style="font-size:20px;font-weight:700;color:${sC(p.ho,10)}">${p.ho}/10</div></div>${p.url?`<div style="margin-left:auto;display:flex;align-items:center"><a href="${p.url}" target="_blank">↗ Live</a></div>`:''}</div><div style="background:var(--bg);border-radius:8px;padding:8px 12px;margin-bottom:8px"><div style="font-size:10px;color:var(--muted)">NEXT PRIORITY</div><div style="font-size:12px;font-weight:600">${p.next}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap">${compHtml}</div></div>`}).join('');
+return `<div class="card project-card" onclick="location.hash='#/${p.slug}'" title="Click to view ${p.name} details"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:8px"><span style="width:4px;height:24px;border-radius:2px;background:${pC[p.name]};display:inline-block"></span><b style="font-size:16px">${p.name}</b>${p.deadline?`<span class="badge" style="background:${C.orange}22;color:${C.orange};border:1px solid ${C.orange}44">${p.deadline}</span>`:''}</div><div style="display:flex;align-items:center;gap:4px"><span class="dot" style="${dotCls(p.status)}"></span><span style="font-size:11px;color:var(--muted)">${p.status}</span><span style="font-size:11px;color:var(--muted);margin-left:8px;opacity:0.5">→</span></div></div><p style="color:var(--muted);font-size:13px;margin-bottom:10px">${p.tag}</p><div style="margin-bottom:10px">${p.stack.map(t=>`<span class="tag">${t}</span>`).join('')}</div><div style="display:flex;gap:16px;margin-bottom:10px"><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Product</div><div style="font-size:20px;font-weight:700;color:${sC(p.hp,10)}">${p.hp}/10</div></div><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Ops</div><div style="font-size:20px;font-weight:700;color:${sC(p.ho,10)}">${p.ho}/10</div></div>${p.url?`<div style="margin-left:auto;display:flex;align-items:center"><a href="${p.url}" target="_blank" onclick="event.stopPropagation()">↗ Live</a></div>`:''}</div><div style="background:var(--bg);border-radius:8px;padding:8px 12px;margin-bottom:8px"><div style="font-size:10px;color:var(--muted)">NEXT PRIORITY</div><div style="font-size:12px;font-weight:600">${p.next}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap">${compHtml}</div></div>`}).join('');
 
+// ─────────────────────────────────────────────
 // COSTS
+// ─────────────────────────────────────────────
 const costs=[
 {p:'Trackr',s:'Railway (hosting)',c:'$4.20/mo',st:'Active'},
 {p:'Trackr',s:'Neon Postgres',c:'Free tier',st:'Active'},
@@ -134,14 +310,18 @@ const costs=[
 ];
 document.getElementById('costTable').innerHTML=costs.map(c=>`<tr style="border-bottom:1px solid rgba(45,51,72,0.13)"><td style="color:${pC[c.p]||C.muted}">${c.p}</td><td>${c.s}</td><td>${c.c}</td><td><span class="badge" style="background:${c.st==='Active'||c.st==='Wired'?C.green:c.st.includes('test')?C.yellow:C.muted}22;color:${c.st==='Active'||c.st==='Wired'?C.green:c.st.includes('test')?C.yellow:C.muted}">${c.st}</span></td></tr>`).join('');
 
+// ─────────────────────────────────────────────
 // GO/NO-GO
+// ─────────────────────────────────────────────
 const dims=['Market Size','Build Effort','Time to User','Monetization','Moat'];
 const keys=['m','e','t','mo','mt'];
 document.getElementById('sliders').innerHTML=dims.map((d,i)=>`<div class="slider-group"><label>${d} <span id="v${keys[i]}">3</span></label><input type="range" min="1" max="5" value="3" id="s${keys[i]}" oninput="ug()"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted)"><span>1</span><span>5</span></div></div>`).join('');
 let rc;function initR(){rc=new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels:dims,datasets:[{data:[3,3,3,3,3],backgroundColor:C.yellow+'33',borderColor:C.yellow,borderWidth:2,pointBackgroundColor:C.yellow}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{stepSize:1,color:C.muted,backdropColor:'transparent'},grid:{color:'#2D3348'},angleLines:{color:'#2D3348'},pointLabels:{color:C.muted,font:{size:10}}}}}})}initR();
 function ug(){let t=0;const d=[];keys.forEach(k=>{const v=+document.getElementById('s'+k).value;document.getElementById('v'+k).textContent=v;t+=v;d.push(v)});const c=t>=18?C.green:t>=13?C.yellow:C.red;document.getElementById('vScore').textContent=t;document.getElementById('vScore').style.color=c;document.getElementById('vLabel').textContent=t>=18?'GO':t>=13?'CONDITIONAL':'NO-GO';document.getElementById('vLabel').style.color=c;document.getElementById('vHint').textContent=t>=18?'Strong opportunity. Proceed to market research.':t>=13?'Needs refinement.':'Does not meet threshold.';rc.data.datasets[0].data=d;rc.data.datasets[0].backgroundColor=c+'33';rc.data.datasets[0].borderColor=c;rc.data.datasets[0].pointBackgroundColor=c;rc.update()}
 
-// PRIORITIES - UPDATED for revenue + users focus
+// ─────────────────────────────────────────────
+// PRIORITIES
+// ─────────────────────────────────────────────
 const pq=[
 {r:1,p:'Trackr',a:'Set production env vars on Railway (CORS_ORIGIN, GOOGLE_REDIRECT_URI) so real users can sign up',e:'30min',i:'Critical'},
 {r:2,p:'Onset',a:'Set Supabase env vars on Vercel so auth works in production',e:'15min',i:'Critical'},
@@ -157,7 +337,9 @@ const pq=[
 const iC=i=>i==='Critical'?C.red:i==='High'?C.orange:C.yellow;
 document.getElementById('priorityQ').innerHTML=pq.map(p=>`<div class="priority-item"><span style="width:4px;height:32px;border-radius:2px;background:${pC[p.p]||C.accent};margin-right:12px;flex-shrink:0"></span><span style="font-size:14px;font-weight:700;color:var(--muted);margin-right:12px;min-width:24px">#${p.r}</span><div style="flex:1"><div style="font-size:13px;font-weight:600">${p.a}</div><div style="font-size:10px;color:var(--muted);margin-top:4px"><span style="color:${pC[p.p]||C.muted}">${p.p}</span> | ⏱ ${p.e}</div></div><span class="badge" style="background:${iC(p.i)}22;color:${iC(p.i)};border:1px solid ${iC(p.i)}44">${p.i}</span></div>`).join('');
 
-// OPS LOG - REAL entries
+// ─────────────────────────────────────────────
+// OPS LOG
+// ─────────────────────────────────────────────
 const logs=[
 {t:'Mar 25, 12:15 PM',a:'Pushed Trackr, Onset, PolitiTrack to GitHub. Vercel auto-deploys triggered.',p:'All',c:C.green},
 {t:'Mar 25, 12:00 PM',a:'Stripe webhook secret + price ID wired into Trackr server/.env',p:'Trackr',c:C.accent},
@@ -171,7 +353,9 @@ const logs=[
 ];
 document.getElementById('opsLog').innerHTML=logs.map(l=>`<div class="log-entry"><div style="width:8px;height:8px;border-radius:50%;background:${l.c};margin-top:5px;flex-shrink:0"></div><div style="flex:1"><div style="font-size:13px">${l.a}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${l.t} — <span style="color:${pC[l.p]||C.muted}">${l.p}</span></div></div></div>`).join('');
 
-// SECURITY - UPDATED
+// ─────────────────────────────────────────────
+// SECURITY
+// ─────────────────────────────────────────────
 const sec=[
 {r:'No secrets in git',t:'✅',on:'✅',p:'⚠️',s:'✅'},
 {r:'.env configured',t:'✅',on:'✅',p:'✅',s:'⚠️'},
@@ -187,7 +371,9 @@ const sec=[
 ];
 document.getElementById('secTable').innerHTML=`<thead><tr><th>Requirement</th><th style="text-align:center;color:${C.trackr}">Trackr</th><th style="text-align:center;color:${C.onset}">Onset</th><th style="text-align:center;color:${C.polititrack}">PolitiTrack</th><th style="text-align:center;color:${C.sdr}">SDR Copilot</th></tr></thead><tbody>${sec.map(r=>`<tr style="border-bottom:1px solid rgba(45,51,72,0.13)"><td style="padding:8px 12px;font-weight:500">${r.r}</td><td style="text-align:center;padding:8px">${r.t}</td><td style="text-align:center;padding:8px">${r.on}</td><td style="text-align:center;padding:8px">${r.p}</td><td style="text-align:center;padding:8px">${r.s}</td></tr>`).join('')}</tbody>`;
 
+// ─────────────────────────────────────────────
 // REVENUE
+// ─────────────────────────────────────────────
 const rev=[
 {n:'Trackr',mrr:'$0',pay:'Stripe wired (test mode)',note:'$9/mo Pro tier ready'},
 {n:'Onset',mrr:'$0',pay:'Not wired',note:'Affiliate revenue possible'},
@@ -195,6 +381,182 @@ const rev=[
 {n:'SDR Copilot',mrr:'$0',pay:'Not wired',note:'Highest ceiling — B2B SaaS'}
 ];
 document.getElementById('revCards').innerHTML=rev.map(r=>`<div class="card" style="text-align:center"><div style="font-size:12px;font-weight:600;color:${pC[r.n]}">${r.n}</div><div style="font-size:28px;font-weight:800;color:var(--muted);margin:8px 0">${r.mrr}</div><div style="font-size:10px;color:var(--muted)">MRR</div><div style="margin-top:8px"><span class="badge" style="background:var(--muted)22;color:var(--muted)">${r.pay}</span></div><div style="font-size:10px;color:var(--muted);margin-top:6px">${r.note}</div></div>`).join('');
+
+// ─────────────────────────────────────────────
+// DETAIL VIEW RENDERER
+// ─────────────────────────────────────────────
+function renderDetail(proj) {
+  const statusColor = proj.status === 'live' ? C.green : proj.status === 'deploying' ? C.yellow : C.red;
+  const {pipeline} = proj;
+  const doneCount = proj.features.filter(f => f.done).length;
+  const totalCount = proj.features.length;
+  const pct = Math.round((doneCount / totalCount) * 100);
+
+  const pipelineHTML = pipeline.phases.map((phase, i) => {
+    const cls = i < pipeline.current ? 'past' : i === pipeline.current ? 'current' : '';
+    const progressBar = i === pipeline.current
+      ? `<div class="phase-progress"><div class="phase-progress-fill" style="width:${pipeline.completion}%"></div></div>`
+      : '';
+    const check = i < pipeline.current ? ' ✓' : '';
+    return `<div class="pipeline-phase ${cls}">
+      <div class="phase-num">Phase ${i+1}</div>
+      <div>${phase}${check}</div>
+      ${progressBar}
+    </div>`;
+  }).join('');
+
+  const featuresHTML = proj.features.map(f =>
+    `<div class="feature-item ${f.done ? 'done' : 'todo'}">
+      <div class="check-icon ${f.done ? 'done' : 'todo'}">${f.done ? '✓' : ''}</div>
+      <span>${f.label}</span>
+    </div>`
+  ).join('');
+
+  const {deployment: dep} = proj;
+  const deployHTML = `
+    <div class="deploy-item">
+      <div class="deploy-label">Frontend</div>
+      <div class="deploy-value">${dep.frontend.platform}</div>
+      ${dep.frontend.url ? `<div style="margin-top:4px"><a href="${dep.frontend.url}" target="_blank" style="font-size:11px">${dep.frontend.url}</a></div>` : ''}
+    </div>
+    <div class="deploy-item">
+      <div class="deploy-label">Backend</div>
+      <div class="deploy-value">${dep.backend.platform}</div>
+      ${dep.backend.url ? `<div style="margin-top:4px"><a href="${dep.backend.url}" target="_blank" style="font-size:11px">${dep.backend.url}</a></div>` : ''}
+    </div>
+    <div class="deploy-item">
+      <div class="deploy-label">Last Deploy</div>
+      <div class="deploy-value">${dep.lastDeploy || '—'}</div>
+    </div>
+    <div class="deploy-item">
+      <div class="deploy-label">Auto-Deploy</div>
+      <div class="deploy-value" style="color:${dep.autoDeploy ? C.green : C.muted}">${dep.autoDeploy ? 'Yes (GitHub → Vercel)' : 'No'}</div>
+    </div>`;
+
+  const tasksHTML = proj.tasks.length
+    ? proj.tasks.map(t => `
+      <div class="priority-item">
+        <span style="width:4px;height:32px;border-radius:2px;background:${proj.color};margin-right:12px;flex-shrink:0"></span>
+        <span style="font-size:14px;font-weight:700;color:var(--muted);margin-right:12px;min-width:24px">#${t.rank}</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${t.action}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">⏱ ${t.effort}</div>
+        </div>
+        <span class="badge" style="background:${iC(t.impact)}22;color:${iC(t.impact)};border:1px solid ${iC(t.impact)}44">${t.impact}</span>
+      </div>`).join('')
+    : `<div style="padding:16px;color:var(--muted);font-size:13px">No tasks queued.</div>`;
+
+  const {revenue: rev2} = proj;
+  const analyticsLabel = rev2.analytics.enabled ? `${rev2.analytics.platform}` : 'No';
+
+  const stackHTML = proj.stack.map(s => `<span class="tag" style="font-size:11px;padding:4px 8px">${s}</span>`).join('');
+
+  document.getElementById('detail-view').innerHTML = `
+    <!-- Header -->
+    <div class="detail-header">
+      <button class="back-btn" onclick="location.hash=''">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex:1">
+        <span style="width:4px;height:32px;border-radius:2px;background:${proj.color};display:inline-block;flex-shrink:0"></span>
+        <span class="detail-title">${proj.name}</span>
+        <span style="color:var(--muted);font-size:14px">${proj.tag}</span>
+        <span class="badge" style="background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}44">${proj.status}</span>
+        ${proj.url ? `<a href="${proj.url}" target="_blank" class="detail-live-link" style="background:${proj.color}18;color:${proj.color};border:1px solid ${proj.color}33">↗ ${proj.url.replace('https://','')}</a>` : ''}
+      </div>
+    </div>
+
+    <!-- Overall progress pill -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px">
+      <div style="flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${proj.color};border-radius:3px;transition:width 0.6s ease"></div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:${proj.color};flex-shrink:0">${pct}% complete (${doneCount}/${totalCount} features)</div>
+    </div>
+
+    <!-- Pipeline -->
+    <div class="detail-section">
+      <h3>Build Pipeline</h3>
+      <div class="pipeline">${pipelineHTML}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Currently in phase ${pipeline.current+1}: <b style="color:${proj.color}">${pipeline.phases[pipeline.current]}</b> — ${pipeline.completion}% complete</div>
+    </div>
+
+    <!-- Features -->
+    <div class="detail-section">
+      <h3>Feature Checklist</h3>
+      <div class="feature-list card" style="padding:16px">${featuresHTML}</div>
+    </div>
+
+    <!-- Deployment -->
+    <div class="detail-section">
+      <h3>Deployment Info</h3>
+      <div class="deploy-grid">${deployHTML}</div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="detail-section">
+      <h3>Task Queue</h3>
+      <div class="card" style="padding:0;overflow:hidden">${tasksHTML}</div>
+    </div>
+
+    <!-- Revenue & Users -->
+    <div class="detail-section">
+      <h3>Revenue &amp; Users</h3>
+      <div class="rev-row">
+        <div class="rev-item">
+          <div class="rev-label">MRR</div>
+          <div class="rev-value" style="color:var(--muted)">${rev2.mrr}</div>
+        </div>
+        <div class="rev-item">
+          <div class="rev-label">Users</div>
+          <div class="rev-value" style="color:var(--muted)">${rev2.users}</div>
+        </div>
+        <div class="rev-item">
+          <div class="rev-label">Analytics</div>
+          <div style="margin-top:6px;font-size:13px;font-weight:600;color:${rev2.analytics.enabled ? C.green : C.muted}">${analyticsLabel}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="detail-section">
+      <h3>Tech Stack</h3>
+      <div class="stack-list">${stackHTML}</div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// ROUTER
+// ─────────────────────────────────────────────
+const mainView = document.getElementById('main-view');
+const detailView = document.getElementById('detail-view');
+
+function navigate() {
+  const hash = location.hash;
+  if (hash && hash.startsWith('#/')) {
+    const slug = hash.slice(2);
+    const proj = DATA[slug];
+    if (proj) {
+      renderDetail(proj);
+      // Transition: hide main, show detail
+      mainView.classList.remove('view-visible');
+      mainView.classList.add('view-hidden');
+      detailView.classList.remove('view-hidden');
+      detailView.classList.add('view-visible');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      document.title = `${proj.name} — Command Center`;
+      return;
+    }
+  }
+  // Show main dashboard
+  detailView.classList.remove('view-visible');
+  detailView.classList.add('view-hidden');
+  mainView.classList.remove('view-hidden');
+  mainView.classList.add('view-visible');
+  document.title = 'Portfolio Command Center';
+}
+
+window.addEventListener('hashchange', navigate);
+navigate(); // run on page load
 </script>
 </body>
 </html>
