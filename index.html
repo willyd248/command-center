@@ -1,200 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Command Center</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-:root{--bg:#0F1117;--card:#1A1D27;--accent:#4D8EFF;--green:#22C55E;--yellow:#EAB308;--red:#EF4444;--orange:#F97316;--text:#E2E8F0;--muted:#94A3B8;--border:#2D3348;--trackr:#4D8EFF;--onset:#A855F7;--polititrack:#22C55E;--sdr:#F97316}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px 32px;line-height:1.5}
-h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--onset));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-h2{font-size:18px;font-weight:700;margin:28px 0 14px;display:flex;align-items:center;gap:8px}
-.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
-.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:24px}
-.clock{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
-.clock-date{color:var(--muted);font-size:12px}
-.score{font-size:32px;font-weight:800}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.tag{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);display:inline-block;margin:2px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{padding:8px 6px;text-align:left;color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-td{padding:6px}
-.slider-group{margin-bottom:16px}
-.slider-group label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px}
-.slider-group label span{font-size:14px;font-weight:700;color:var(--accent)}
-input[type=range]{width:100%;accent-color:var(--accent)}
-.verdict-box{text-align:center;padding:16px;background:var(--bg);border-radius:8px;margin-top:8px}
-.cost-badge{background:rgba(239,68,68,0.13);border:2px solid var(--red);border-radius:8px;padding:8px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red)}
-.priority-item{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(45,51,72,0.13)}
-.log-entry{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(45,51,72,0.13)}
-.log-entry:last-child{border-bottom:none}
-a{color:var(--accent);text-decoration:none}
-.updated{color:var(--green);font-size:11px;font-weight:600}
-@media(max-width:900px){.grid-5,.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Control v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: #1e1e2a;
+      --text: #e8e8f0;
+      --text-muted: #6b6b80;
+      --text-dim: #3a3a4a;
+      --green: #22c55e;
+      --green-bg: #052010;
+      --green-border: #0d4a20;
+      --yellow: #eab308;
+      --yellow-bg: #1a1400;
+      --yellow-border: #3d3000;
+      --red: #ef4444;
+      --red-bg: #1a0505;
+      --red-border: #4a1010;
+      --accent: #6366f1;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse-dot 2s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--accent); }
+      50% { opacity: 0.4; box-shadow: 0 0 4px var(--accent); }
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .header-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 24px 48px;
+      display: grid;
+      gap: 36px;
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* PROJECT GRID */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .project-grid { grid-template-columns: 1fr; }
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .project-card:hover { transform: translateY(-2px); }
+
+    .project-card.status-live    { border-left: 3px solid var(--green); }
+    .project-card.status-almost  { border-left: 3px solid var(--yellow); }
+    .project-card.status-not-ready { border-left: 3px solid var(--red); }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .project-name {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .badge-live      { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .badge-almost    { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+    .badge-not-ready { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+    .project-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .project-metrics {
+      display: flex;
+      gap: 20px;
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-value.zero  { color: var(--text-dim); }
+    .metric-value.money { color: var(--green); }
+    .metric-value.unknown { color: var(--text-muted); }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 2px;
+    }
+
+    .analytics-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .analytics-pip {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .analytics-pip.on  { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .analytics-pip.off { background: var(--text-dim); }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* TWO COL */
+    .two-col {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* PRIORITY QUEUE */
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .queue-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: background 0.15s;
+    }
+
+    .queue-item:hover { background: var(--surface2); }
+
+    .queue-rank {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .queue-body { flex: 1; min-width: 0; }
+
+    .queue-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .project-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .queue-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .queue-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .approval-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      background: var(--yellow-bg);
+      color: var(--yellow);
+      border: 1px solid var(--yellow-border);
+    }
+
+    /* KEY DECISIONS */
+    .decisions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .decision-card {
+      background: var(--surface);
+      border: 1px solid var(--yellow-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .decision-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .decision-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* RECENT UPDATES */
+    .updates-list {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .update-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .update-item:last-child { border-bottom: none; }
+    .update-item:hover { background: var(--surface2); }
+
+    .update-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    .update-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+  </style>
 </head>
 <body>
-<div class="header">
-<div>
-<h1>Portfolio Command Center</h1>
-<p style="color:var(--muted);font-size:13px;margin-top:4px">Outcome-Oriented Business Operations</p>
-</div>
-<div><div class="clock" id="clock"></div><div class="clock-date" id="clockDate"></div><div class="updated">Last updated: <span id="lastUpdated"></span></div></div>
-</div>
-
-<!-- OUTCOMES -->
-<h2>Outcome Scorecard</h2>
-<div class="grid-5" id="outcomes"></div>
-
-<!-- PROJECTS -->
-<h2>Projects</h2>
-<div class="grid-2" id="projects"></div>
-
-<!-- COSTS -->
-<h2>API Cost Tracker</h2>
-<div style="margin-bottom:16px"><span class="cost-badge">HARD LIMIT: $50/mo external costs (excl. Anthropic)</span> <span style="font-size:24px;font-weight:800;color:var(--green);margin-left:12px">$4.20 <span style="font-size:14px;color:var(--muted);font-weight:400">/ $50.00</span></span></div>
-<div class="card"><table><thead><tr><th>Project</th><th>Service</th><th>Monthly Cost</th><th>Status</th></tr></thead><tbody id="costTable"></tbody></table></div>
-
-<!-- GO/NO-GO -->
-<h2>Go/No-Go Evaluator</h2>
-<div class="grid-2">
-<div class="card"><div id="sliders"></div><div class="verdict-box"><div style="font-size:48px;font-weight:900" id="vScore">15</div><div style="font-size:20px;font-weight:800;margin-top:4px" id="vLabel">CONDITIONAL</div><div style="font-size:11px;color:var(--muted);margin-top:4px" id="vHint"></div></div></div>
-<div class="card"><canvas id="radarChart" height="280"></canvas><div style="background:var(--bg);border-radius:8px;padding:12px;margin-top:12px"><div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:6px">Decision Pipeline</div><div style="font-size:11px;color:var(--muted)">Market Research → Competitor Analysis → MVP Scope → Security Baseline → Analytics Plan → Build</div></div></div>
-</div>
-
-<!-- PRIORITY QUEUE -->
-<h2>Priority Queue — Revenue + Users Focus</h2>
-<div class="card" style="padding:0;overflow:hidden" id="priorityQ"></div>
-
-<!-- OPS LOG -->
-<h2>Operations Log</h2>
-<div class="card" id="opsLog"></div>
-
-<!-- SECURITY -->
-<h2>Security Compliance</h2>
-<div class="card" style="overflow-x:auto"><table id="secTable"></table></div>
-
-<!-- REVENUE -->
-<h2>Revenue Dashboard</h2>
-<div class="grid-4" id="revCards"></div>
-<div class="card" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
-<div><div style="font-size:12px;font-weight:600">Total Portfolio MRR</div><div style="font-size:36px;font-weight:900;color:var(--muted)">$0.00</div></div>
-<div style="text-align:right"><div style="font-size:12px;color:var(--muted)">Monthly costs: <span style="color:var(--text);font-weight:600">$4.20</span></div><div style="font-size:12px;color:var(--muted)">Net: <span style="color:var(--red);font-weight:600">-$4.20</span></div></div>
-</div>
 
 <script>
-const C={bg:'#0F1117',card:'#1A1D27',accent:'#4D8EFF',green:'#22C55E',yellow:'#EAB308',red:'#EF4444',orange:'#F97316',text:'#E2E8F0',muted:'#94A3B8',trackr:'#4D8EFF',onset:'#A855F7',polititrack:'#22C55E',sdr:'#F97316'};
-const pC={Trackr:C.trackr,Onset:C.onset,PolitiTrack:C.polititrack,'SDR Copilot':C.sdr,All:C.accent};
-function sC(s,m=100){const p=(s/m)*100;return p>=70?C.green:p>=40?C.yellow:C.red}
-function updateClock(){const n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString();document.getElementById('clockDate').textContent=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});document.getElementById('lastUpdated').textContent='March 25, 2026 12:30 PM ET'}
-setInterval(updateClock,1000);updateClock();
+const DATA = {
+  meta: {
+    title: "Mission Control",
+    subtitle: "Portfolio Command Center v3",
+    lastUpdated: "2026-03-26"
+  },
 
-// OUTCOMES - UPDATED with real status
-const outcomes=[
-{name:'Safety',score:55,trend:'up',summary:'PolitiTrack keys need rotation. Privacy policies deployed to all 4 projects. .gitignore fixed.'},
-{name:'Data Security',score:50,trend:'up',summary:'Supabase auth added to Onset. Clerk auth on Trackr. Salesforce secret moved to local storage.'},
-{name:'Reputation',score:60,trend:'up',summary:'Brand-forward enforced. Marketing drafts ready for approval. No personal name/image used.'},
-{name:'Revenue',score:15,trend:'up',summary:'Stripe fully wired on Trackr ($9/mo Pro). No other payment integrations yet.'},
-{name:'Users',score:40,trend:'up',summary:'All 3 web apps deployed to Vercel/GitHub. Landing pages live. No active users yet.'}
-];
-document.getElementById('outcomes').innerHTML=outcomes.map(o=>`<div class="card" style="text-align:center"><div style="font-size:13px;font-weight:600;margin-bottom:4px">${o.name}</div><div class="score" style="color:${sC(o.score)}">${o.score}</div><div style="font-size:11px;color:${o.trend==='up'?C.green:C.muted};margin:4px 0">${o.trend==='up'?'↗':'→'} ${o.trend}</div><div style="font-size:10px;color:var(--muted);line-height:1.4">${o.summary}</div></div>`).join('');
+  projects: [
+    {
+      id: "trackr",
+      name: "Trackr",
+      status: "almost",
+      statusLabel: "Almost",
+      note: "Config fix done. Ready to deploy.",
+      mrr: 0,
+      users: 0,
+      usersKnown: true,
+      analytics: false,
+      analyticsLabel: "No analytics"
+    },
+    {
+      id: "onset",
+      name: "Onset",
+      status: "almost",
+      statusLabel: "Almost",
+      note: "Live at onsetdj.com. No auth or payments.",
+      mrr: 0,
+      users: null,
+      usersKnown: false,
+      analytics: true,
+      analyticsLabel: "Vercel Analytics"
+    },
+    {
+      id: "polititrack",
+      name: "PolitiTrack",
+      status: "live",
+      statusLabel: "Live",
+      note: "Live at polititrack-chi.vercel.app",
+      mrr: 0,
+      users: null,
+      usersKnown: false,
+      analytics: true,
+      analyticsLabel: "Vercel Analytics"
+    },
+    {
+      id: "sdr-copilot",
+      name: "SDR Copilot",
+      status: "not-ready",
+      statusLabel: "Not Ready",
+      note: "OAuth placeholder, audio broken, not published.",
+      mrr: 0,
+      users: 0,
+      usersKnown: true,
+      analytics: false,
+      analyticsLabel: "No analytics"
+    }
+  ],
 
-// PROJECTS - UPDATED with real status
-const projects=[
-{name:'Trackr',tag:'AI Job Application Tracker',stack:['React','Express','Neon','Clerk','Stripe'],hp:8,ho:5,status:'deploying',url:'https://trackr-ivfg.vercel.app',next:'Set production env vars on Railway (CORS, OAuth redirect)',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:1,privacy:1,stripe:1}},
-{name:'Onset',tag:'Duolingo for DJs',stack:['Vanilla JS','Vite','Web Audio','Supabase'],hp:9,ho:6,status:'live',url:'https://onsetdj.com',next:'Verify Supabase env vars on Vercel for production auth',deadline:'Apr 7 /decide (13 days)',comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}},
-{name:'PolitiTrack',tag:'Congress Transparency Tool',stack:['Next.js 16','React 19','TypeScript'],hp:8,ho:6,status:'live',url:'https://polititrack-chi.vercel.app',next:'Rotate API keys on Congress.gov + OpenFEC',deadline:null,comp:{auth:0,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}},
-{name:'SDR Copilot',tag:'AI Cold Call Coaching',stack:['Chrome MV3','Deepgram','Google OAuth'],hp:6,ho:4,status:'not deployed',url:null,next:'Test against real Orum account, then submit to Chrome Web Store',deadline:null,comp:{auth:1,validation:0,https:1,rateLimit:0,privacy:1,stripe:0}}
-];
-const dotCls=s=>s==='live'?`background:${C.green};box-shadow:0 0 6px ${C.green}`:s==='deploying'?`background:${C.yellow};box-shadow:0 0 6px ${C.yellow}`:`background:${C.red};box-shadow:0 0 6px ${C.red}`;
-document.getElementById('projects').innerHTML=projects.map(p=>{
-const compHtml=Object.entries(p.comp).map(([k,v])=>`<span style="font-size:10px;color:${v?C.green:C.red}">${v?'✓':'✗'} ${k}</span>`).join(' ');
-return `<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:8px"><span style="width:4px;height:24px;border-radius:2px;background:${pC[p.name]};display:inline-block"></span><b style="font-size:16px">${p.name}</b>${p.deadline?`<span class="badge" style="background:${C.orange}22;color:${C.orange};border:1px solid ${C.orange}44">${p.deadline}</span>`:''}</div><div style="display:flex;align-items:center;gap:4px"><span class="dot" style="${dotCls(p.status)}"></span><span style="font-size:11px;color:var(--muted)">${p.status}</span></div></div><p style="color:var(--muted);font-size:13px;margin-bottom:10px">${p.tag}</p><div style="margin-bottom:10px">${p.stack.map(t=>`<span class="tag">${t}</span>`).join('')}</div><div style="display:flex;gap:16px;margin-bottom:10px"><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Product</div><div style="font-size:20px;font-weight:700;color:${sC(p.hp,10)}">${p.hp}/10</div></div><div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Ops</div><div style="font-size:20px;font-weight:700;color:${sC(p.ho,10)}">${p.ho}/10</div></div>${p.url?`<div style="margin-left:auto;display:flex;align-items:center"><a href="${p.url}" target="_blank">↗ Live</a></div>`:''}</div><div style="background:var(--bg);border-radius:8px;padding:8px 12px;margin-bottom:8px"><div style="font-size:10px;color:var(--muted)">NEXT PRIORITY</div><div style="font-size:12px;font-weight:600">${p.next}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap">${compHtml}</div></div>`}).join('');
+  priorityQueue: [
+    { rank: 1, project: "Trackr",      task: "Set production env vars in Vercel + Railway",  time: "1 hour",    needsApproval: false },
+    { rank: 2, project: "Trackr",      task: "Get correct Stripe price ID (price_xxx format)", time: "30 min",   needsApproval: false },
+    { rank: 3, project: "Trackr",      task: "Switch Stripe to live mode",                    time: "15 min",    needsApproval: true  },
+    { rank: 4, project: "Trackr",      task: "Deploy and verify with QA",                     time: "30 min",    needsApproval: true  },
+    { rank: 5, project: "PolitiTrack", task: "Fix localhost in NEXT_PUBLIC_SITE_URL",          time: "5 min",     needsApproval: false },
+    { rank: 6, project: "Onset",       task: "Wire up Supabase auth",                         time: "2–3 hours", needsApproval: false },
+    { rank: 7, project: "Onset",       task: "Build payment flow",                            time: "1–2 days",  needsApproval: false },
+    { rank: 8, project: "SDR Copilot", task: "Fix OAuth + manifest + audio relay",            time: "2–3 weeks", needsApproval: false }
+  ],
 
-// COSTS
-const costs=[
-{p:'Trackr',s:'Railway (hosting)',c:'$4.20/mo',st:'Active'},
-{p:'Trackr',s:'Neon Postgres',c:'Free tier',st:'Active'},
-{p:'Trackr',s:'Clerk Auth',c:'Free tier',st:'Active'},
-{p:'Trackr',s:'Stripe',c:'2.9% + 30¢/txn',st:'Wired (test mode)'},
-{p:'Onset',s:'Vercel',c:'Free tier',st:'Active'},
-{p:'Onset',s:'Supabase',c:'Free tier',st:'Wired'},
-{p:'Onset',s:'Resend',c:'Free tier',st:'Active'},
-{p:'PolitiTrack',s:'Vercel',c:'Free tier',st:'Active'},
-{p:'PolitiTrack',s:'Congress.gov API',c:'Free',st:'Active'},
-{p:'PolitiTrack',s:'OpenFEC API',c:'Free',st:'Active'},
-{p:'SDR Copilot',s:'Deepgram',c:'Pay per use',st:'Not active'},
-{p:'SDR Copilot',s:'Google OAuth',c:'Free',st:'Wired'}
-];
-document.getElementById('costTable').innerHTML=costs.map(c=>`<tr style="border-bottom:1px solid rgba(45,51,72,0.13)"><td style="color:${pC[c.p]||C.muted}">${c.p}</td><td>${c.s}</td><td>${c.c}</td><td><span class="badge" style="background:${c.st==='Active'||c.st==='Wired'?C.green:c.st.includes('test')?C.yellow:C.muted}22;color:${c.st==='Active'||c.st==='Wired'?C.green:c.st.includes('test')?C.yellow:C.muted}">${c.st}</span></td></tr>`).join('');
+  recentUpdates: [
+    "Trackr production config fixed (CORS, OAuth, Stripe URLs)",
+    "DEPLOY.md created with full deployment guide",
+    "Launch readiness audit completed across all 4 projects",
+    "Mission control dashboard rebuilt as operational command center",
+    "45+ development tasks executed across all projects",
+    "Stripe integration built for Trackr",
+    "Landing page shipped for Onset at onsetdj.com",
+    "FEC data expanded for PolitiTrack",
+    "Legal docs deployed to all repos",
+    "Security audit completed"
+  ],
 
-// GO/NO-GO
-const dims=['Market Size','Build Effort','Time to User','Monetization','Moat'];
-const keys=['m','e','t','mo','mt'];
-document.getElementById('sliders').innerHTML=dims.map((d,i)=>`<div class="slider-group"><label>${d} <span id="v${keys[i]}">3</span></label><input type="range" min="1" max="5" value="3" id="s${keys[i]}" oninput="ug()"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted)"><span>1</span><span>5</span></div></div>`).join('');
-let rc;function initR(){rc=new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels:dims,datasets:[{data:[3,3,3,3,3],backgroundColor:C.yellow+'33',borderColor:C.yellow,borderWidth:2,pointBackgroundColor:C.yellow}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{stepSize:1,color:C.muted,backdropColor:'transparent'},grid:{color:'#2D3348'},angleLines:{color:'#2D3348'},pointLabels:{color:C.muted,font:{size:10}}}}}})}initR();
-function ug(){let t=0;const d=[];keys.forEach(k=>{const v=+document.getElementById('s'+k).value;document.getElementById('v'+k).textContent=v;t+=v;d.push(v)});const c=t>=18?C.green:t>=13?C.yellow:C.red;document.getElementById('vScore').textContent=t;document.getElementById('vScore').style.color=c;document.getElementById('vLabel').textContent=t>=18?'GO':t>=13?'CONDITIONAL':'NO-GO';document.getElementById('vLabel').style.color=c;document.getElementById('vHint').textContent=t>=18?'Strong opportunity. Proceed to market research.':t>=13?'Needs refinement.':'Does not meet threshold.';rc.data.datasets[0].data=d;rc.data.datasets[0].backgroundColor=c+'33';rc.data.datasets[0].borderColor=c;rc.data.datasets[0].pointBackgroundColor=c;rc.update()}
+  keyDecisions: [
+    "Approve Trackr production deploy (env vars ready to set)",
+    "Choose Stripe pricing for Trackr — what to charge?",
+    "Onset monetization strategy — freemium or subscription?"
+  ],
 
-// PRIORITIES - UPDATED for revenue + users focus
-const pq=[
-{r:1,p:'Trackr',a:'Set production env vars on Railway (CORS_ORIGIN, GOOGLE_REDIRECT_URI) so real users can sign up',e:'30min',i:'Critical'},
-{r:2,p:'Onset',a:'Set Supabase env vars on Vercel so auth works in production',e:'15min',i:'Critical'},
-{r:3,p:'PolitiTrack',a:'Rotate exposed API keys on Congress.gov and OpenFEC provider sites',e:'15min',i:'Critical'},
-{r:4,p:'Trackr',a:'Create Stripe product in live mode + update env vars for real payments',e:'30min',i:'High'},
-{r:5,p:'Onset',a:'Replace affiliate link placeholders with real Hercules Amazon affiliate IDs',e:'15min',i:'High'},
-{r:6,p:'All',a:'Post approved marketing content to Reddit, X, LinkedIn (drafts ready)',e:'2hrs',i:'High'},
-{r:7,p:'Onset',a:'Add Pioneer DDJ-FLX4 controller support (10x addressable market)',e:'4hrs',i:'High'},
-{r:8,p:'Trackr',a:'Build ghost job detection feature (top user request from market research)',e:'6hrs',i:'Medium'},
-{r:9,p:'SDR Copilot',a:'Test against real Orum account + submit to Chrome Web Store',e:'3hrs',i:'Medium'},
-{r:10,p:'PolitiTrack',a:'Build SEO content pages for "who is my representative" queries',e:'4hrs',i:'Medium'}
-];
-const iC=i=>i==='Critical'?C.red:i==='High'?C.orange:C.yellow;
-document.getElementById('priorityQ').innerHTML=pq.map(p=>`<div class="priority-item"><span style="width:4px;height:32px;border-radius:2px;background:${pC[p.p]||C.accent};margin-right:12px;flex-shrink:0"></span><span style="font-size:14px;font-weight:700;color:var(--muted);margin-right:12px;min-width:24px">#${p.r}</span><div style="flex:1"><div style="font-size:13px;font-weight:600">${p.a}</div><div style="font-size:10px;color:var(--muted);margin-top:4px"><span style="color:${pC[p.p]||C.muted}">${p.p}</span> | ⏱ ${p.e}</div></div><span class="badge" style="background:${iC(p.i)}22;color:${iC(p.i)};border:1px solid ${iC(p.i)}44">${p.i}</span></div>`).join('');
-
-// OPS LOG - REAL entries
-const logs=[
-{t:'Mar 25, 12:15 PM',a:'Pushed Trackr, Onset, PolitiTrack to GitHub. Vercel auto-deploys triggered.',p:'All',c:C.green},
-{t:'Mar 25, 12:00 PM',a:'Stripe webhook secret + price ID wired into Trackr server/.env',p:'Trackr',c:C.accent},
-{t:'Mar 25, 11:45 AM',a:'Google OAuth Client ID wired into SDR Copilot manifest.json',p:'SDR Copilot',c:C.orange},
-{t:'Mar 25, 11:30 AM',a:'All feature branches merged to main across Trackr, Onset, PolitiTrack',p:'All',c:C.green},
-{t:'Mar 25, 10:00 AM',a:'Market research completed: ghost jobs, Pioneer controller, multi-dialer risk',p:'All',c:C.accent},
-{t:'Mar 25, 8:00 AM',a:'Daily ops briefing delivered. Overnight: 60+ commits across 4 projects.',p:'All',c:C.muted},
-{t:'Mar 25, 2:00 AM',a:'SDR Copilot: 4 critical blockers fixed + 8 QA issues. Privacy policies written for all 4.',p:'SDR Copilot',c:C.orange},
-{t:'Mar 25, 1:00 AM',a:'PolitiTrack: House votes + FEC expansion (50→535 members). Onset: Supabase auth + 30 lessons.',p:'PolitiTrack',c:C.green},
-{t:'Mar 24, 11:00 PM',a:'Initial audits completed across all 4 projects. Scheduled automations configured.',p:'All',c:C.muted}
-];
-document.getElementById('opsLog').innerHTML=logs.map(l=>`<div class="log-entry"><div style="width:8px;height:8px;border-radius:50%;background:${l.c};margin-top:5px;flex-shrink:0"></div><div style="flex:1"><div style="font-size:13px">${l.a}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${l.t} — <span style="color:${pC[l.p]||C.muted}">${l.p}</span></div></div></div>`).join('');
-
-// SECURITY - UPDATED
-const sec=[
-{r:'No secrets in git',t:'✅',on:'✅',p:'⚠️',s:'✅'},
-{r:'.env configured',t:'✅',on:'✅',p:'✅',s:'⚠️'},
-{r:'Input validation',t:'❌',on:'❌',p:'❌',s:'❌'},
-{r:'CORS configured',t:'✅',on:'—',p:'✅',s:'—'},
-{r:'Rate limiting',t:'✅',on:'❌',p:'❌',s:'❌'},
-{r:'HTTPS enforced',t:'✅',on:'✅',p:'✅',s:'✅'},
-{r:'Privacy policy',t:'✅',on:'✅',p:'✅',s:'✅'},
-{r:'Terms of service',t:'✅',on:'✅',p:'✅',s:'✅'},
-{r:'Error tracking',t:'❌',on:'❌',p:'❌',s:'❌'},
-{r:'Auth implemented',t:'✅',on:'✅',p:'❌',s:'✅'},
-{r:'Payments wired',t:'✅',on:'❌',p:'—',s:'❌'}
-];
-document.getElementById('secTable').innerHTML=`<thead><tr><th>Requirement</th><th style="text-align:center;color:${C.trackr}">Trackr</th><th style="text-align:center;color:${C.onset}">Onset</th><th style="text-align:center;color:${C.polititrack}">PolitiTrack</th><th style="text-align:center;color:${C.sdr}">SDR Copilot</th></tr></thead><tbody>${sec.map(r=>`<tr style="border-bottom:1px solid rgba(45,51,72,0.13)"><td style="padding:8px 12px;font-weight:500">${r.r}</td><td style="text-align:center;padding:8px">${r.t}</td><td style="text-align:center;padding:8px">${r.on}</td><td style="text-align:center;padding:8px">${r.p}</td><td style="text-align:center;padding:8px">${r.s}</td></tr>`).join('')}</tbody>`;
-
-// REVENUE
-const rev=[
-{n:'Trackr',mrr:'$0',pay:'Stripe wired (test mode)',note:'$9/mo Pro tier ready'},
-{n:'Onset',mrr:'$0',pay:'Not wired',note:'Affiliate revenue possible'},
-{n:'PolitiTrack',mrr:'$0',pay:'N/A',note:'B2B data API is monetization path'},
-{n:'SDR Copilot',mrr:'$0',pay:'Not wired',note:'Highest ceiling — B2B SaaS'}
-];
-document.getElementById('revCards').innerHTML=rev.map(r=>`<div class="card" style="text-align:center"><div style="font-size:12px;font-weight:600;color:${pC[r.n]}">${r.n}</div><div style="font-size:28px;font-weight:800;color:var(--muted);margin:8px 0">${r.mrr}</div><div style="font-size:10px;color:var(--muted)">MRR</div><div style="margin-top:8px"><span class="badge" style="background:var(--muted)22;color:var(--muted)">${r.pay}</span></div><div style="font-size:10px;color:var(--muted);margin-top:6px">${r.note}</div></div>`).join('');
+  stats: {
+    totalMRR: 0,
+    liveProjects: 1,
+    almostProjects: 2,
+    totalProjects: 4
+  }
+};
 </script>
+
+<header>
+  <div class="header-left">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="header-title" id="hTitle"></div>
+      <div class="header-subtitle" id="hSubtitle"></div>
+    </div>
+  </div>
+  <div class="header-date" id="hDate"></div>
+</header>
+
+<main>
+
+  <section>
+    <div class="section-label">Portfolio Pulse</div>
+    <div class="project-grid" id="projectGrid"></div>
+  </section>
+
+  <section>
+    <div class="section-label">Revenue &amp; Users</div>
+    <div class="stats-row" id="statsRow"></div>
+  </section>
+
+  <div class="two-col">
+    <section>
+      <div class="section-label">Priority Queue</div>
+      <div class="queue-list" id="queueList"></div>
+    </section>
+    <section>
+      <div class="section-label">Key Decisions Needed</div>
+      <div class="decisions-list" id="decisionsList"></div>
+    </section>
+  </div>
+
+  <section>
+    <div class="section-label">Recent Updates — Last 48 Hours</div>
+    <div class="updates-list" id="updatesList"></div>
+  </section>
+
+</main>
+
+<footer id="footer"></footer>
+
+<script>
+(function () {
+  const { meta, projects, priorityQueue, recentUpdates, keyDecisions, stats } = DATA;
+
+  document.getElementById('hTitle').textContent = meta.title;
+  document.getElementById('hSubtitle').textContent = meta.subtitle;
+  document.getElementById('hDate').textContent = meta.lastUpdated;
+
+  // Portfolio pulse
+  const grid = document.getElementById('projectGrid');
+  projects.forEach(p => {
+    const usersVal = p.usersKnown ? (p.users === 0 ? '0' : p.users.toLocaleString()) : '—';
+    const usersClass = !p.usersKnown ? 'unknown' : p.users === 0 ? 'zero' : '';
+    const card = document.createElement('div');
+    card.className = `project-card status-${p.status}`;
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="project-name">${p.name}</div>
+        <div class="status-badge badge-${p.status}">${p.statusLabel}</div>
+      </div>
+      <div class="project-note">${p.note}</div>
+      <div class="project-metrics">
+        <div>
+          <div class="metric-value ${p.mrr === 0 ? 'zero' : 'money'}">$${p.mrr}</div>
+          <div class="metric-label">MRR</div>
+        </div>
+        <div>
+          <div class="metric-value ${usersClass}">${usersVal}</div>
+          <div class="metric-label">Users</div>
+        </div>
+      </div>
+      <div class="analytics-row">
+        <div class="analytics-pip ${p.analytics ? 'on' : 'off'}"></div>
+        <span>${p.analyticsLabel}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Stats
+  const statsRow = document.getElementById('statsRow');
+  [
+    { value: `$${stats.totalMRR}`, label: 'Total MRR' },
+    { value: stats.liveProjects,   label: 'Live' },
+    { value: stats.almostProjects, label: 'Almost Live' },
+    { value: stats.totalProjects,  label: 'Total Projects' }
+  ].forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'stat-card';
+    el.innerHTML = `<div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>`;
+    statsRow.appendChild(el);
+  });
+
+  // Priority queue
+  const queueList = document.getElementById('queueList');
+  priorityQueue.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'queue-item';
+    el.innerHTML = `
+      <div class="queue-rank">${item.rank}</div>
+      <div class="queue-body">
+        <div class="queue-title">
+          <span class="project-tag">${item.project}</span>${item.task}
+        </div>
+      </div>
+      <div class="queue-meta">
+        <div class="queue-time">${item.time}</div>
+        ${item.needsApproval ? '<div class="approval-tag">Approval</div>' : ''}
+      </div>
+    `;
+    queueList.appendChild(el);
+  });
+
+  // Decisions
+  const decisionsList = document.getElementById('decisionsList');
+  keyDecisions.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'decision-card';
+    el.innerHTML = `<div class="decision-icon">⚡</div><div class="decision-text">${d}</div>`;
+    decisionsList.appendChild(el);
+  });
+
+  // Updates
+  const updatesList = document.getElementById('updatesList');
+  recentUpdates.forEach(u => {
+    const el = document.createElement('div');
+    el.className = 'update-item';
+    el.innerHTML = `<div class="update-pip"></div><div class="update-text">${u}</div>`;
+    updatesList.appendChild(el);
+  });
+
+  document.getElementById('footer').textContent =
+    `Mission Control · ${meta.lastUpdated} · willyd248`;
+})();
+</script>
+
 </body>
 </html>
