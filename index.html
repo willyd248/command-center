@@ -128,10 +128,17 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      transition: transform 0.15s, border-color 0.15s;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
     }
 
-    .project-card:hover { transform: translateY(-2px); }
+    .project-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
 
     .project-card.status-live    { border-left: 3px solid var(--green); }
     .project-card.status-almost  { border-left: 3px solid var(--yellow); }
@@ -148,6 +155,24 @@
       font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.03em;
+    }
+
+    .card-top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .arrow-indicator {
+      font-size: 14px;
+      color: var(--text-dim);
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .project-card:hover .arrow-indicator {
+      color: var(--accent);
+      transform: translateX(2px);
     }
 
     .status-badge {
@@ -405,6 +430,411 @@
       font-size: 12px;
       color: var(--text-dim);
     }
+
+    /* VIEW TRANSITIONS */
+    #main-view, #detail-view {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .view-hidden {
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+      transform: translateX(12px);
+    }
+
+    .view-visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* DETAIL VIEW */
+    #detail-view {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 24px 48px;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+      font-family: inherit;
+    }
+
+    .back-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .detail-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .detail-tag {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .detail-status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .detail-live-link {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .detail-live-link:hover { opacity: 0.8; }
+
+    /* PIPELINE */
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .pipeline-phase {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .pipeline-phase:first-child { border-radius: 8px 0 0 8px; }
+    .pipeline-phase:last-child  { border-radius: 0 8px 8px 0; }
+    .pipeline-phase + .pipeline-phase { border-left: none; }
+
+    .pipeline-phase.past {
+      color: var(--green);
+      border-color: var(--green-border);
+      background: var(--green-bg);
+    }
+
+    .pipeline-phase.current {
+      color: var(--text);
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+      box-shadow: 0 0 0 1px var(--accent);
+      z-index: 1;
+    }
+
+    .pipeline-phase .phase-num {
+      font-size: 9px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      opacity: 0.6;
+    }
+
+    .phase-progress {
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border);
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .phase-progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--accent);
+      transition: width 0.6s ease;
+    }
+
+    /* FEATURE CHECKLIST */
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .feature-list { grid-template-columns: 1fr; }
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: var(--bg);
+      font-size: 12px;
+    }
+
+    .feature-item.done { color: var(--text); }
+    .feature-item.todo { color: var(--text-muted); }
+
+    .check-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .check-icon.done { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .check-icon.todo { background: transparent; border: 1px solid var(--border); }
+
+    /* DEPLOYMENT GRID */
+    .deploy-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .deploy-grid { grid-template-columns: 1fr; }
+    }
+
+    .deploy-item {
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .deploy-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .deploy-value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .deploy-link {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .deploy-link:hover { text-decoration: underline; }
+
+    /* TASK QUEUE (detail) */
+    .detail-queue {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .detail-queue-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .detail-queue-item:last-child { border-bottom: none; }
+    .detail-queue-item:hover { background: var(--surface2); }
+
+    .detail-queue-rank {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      width: 22px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .detail-queue-body { flex: 1; min-width: 0; }
+
+    .detail-queue-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .detail-queue-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .impact-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .impact-critical { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .impact-high     { background: #1a0e00; color: #f97316; border: 1px solid #4a2800; }
+    .impact-medium   { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+
+    /* REVENUE ROW */
+    .rev-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .rev-row { grid-template-columns: 1fr; }
+    }
+
+    .rev-item {
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .rev-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .rev-value {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-dim);
+    }
+
+    /* DETAIL SECTION */
+    .detail-section {
+      margin-bottom: 32px;
+    }
+
+    .detail-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* STACK TAGS */
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stack-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .progress-bar-track {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    .progress-bar-label {
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      .pipeline { flex-direction: column; }
+      .pipeline-phase {
+        border-radius: 0 !important;
+        border-left: 1px solid var(--border) !important;
+        border-top: none;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pipeline-phase:first-child { border-radius: 8px 8px 0 0 !important; border-top: 1px solid var(--border) !important; }
+      .pipeline-phase:last-child  { border-radius: 0 0 8px 8px !important; }
+    }
   </style>
 </head>
 <body>
@@ -421,62 +851,188 @@ const DATA = {
     {
       id: "trackr",
       name: "Trackr",
+      tag: "AI Job Application Tracker",
+      color: "#6366f1",
       status: "almost",
       statusLabel: "Almost",
       note: "Config fix done. Ready to deploy.",
+      url: "https://trackr-ivfg.vercel.app",
       mrr: 0,
       users: 0,
       usersKnown: true,
       analytics: false,
-      analyticsLabel: "No analytics"
+      analyticsLabel: "No analytics",
+      pipeline: {
+        phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
+        current: 1,
+        completion: 75
+      },
+      features: [
+        { label: "User authentication (Clerk)", done: true },
+        { label: "Job application tracking", done: true },
+        { label: "Gmail ingestion (AI parsing)", done: true },
+        { label: "Stripe payment integration", done: true },
+        { label: "Chrome extension built", done: true },
+        { label: "Production env vars configured", done: false },
+        { label: "Stripe live mode (test mode only)", done: false },
+        { label: "Analytics integration", done: false },
+        { label: "Chrome extension tested & published", done: false },
+        { label: "CI/CD pipeline", done: false }
+      ],
+      deployment: {
+        frontend: { platform: "Vercel", url: "https://trackr-ivfg.vercel.app" },
+        backend:  { platform: "Railway", url: null },
+        lastDeploy: "Mar 25, 2026",
+        autoDeploy: true
+      },
+      tasks: [
+        { rank: 1, action: "Set production env vars on Railway (CORS_ORIGIN, GOOGLE_REDIRECT_URI)", effort: "30 min", impact: "Critical" },
+        { rank: 2, action: "Get correct Stripe price ID (price_xxx format)", effort: "30 min", impact: "High" },
+        { rank: 3, action: "Switch Stripe to live mode", effort: "15 min", impact: "High" },
+        { rank: 4, action: "Deploy and verify with QA", effort: "30 min", impact: "High" }
+      ],
+      stack: ["React", "Express", "Neon Postgres", "Clerk Auth", "Stripe", "Railway", "Vercel"]
     },
     {
       id: "onset",
       name: "Onset",
+      tag: "Duolingo for DJs",
+      color: "#a855f7",
       status: "almost",
       statusLabel: "Almost",
       note: "Live at onsetdj.com. No auth or payments.",
+      url: "https://onsetdj.com",
       mrr: 0,
       users: null,
       usersKnown: false,
       analytics: true,
-      analyticsLabel: "Vercel Analytics"
+      analyticsLabel: "Vercel Analytics",
+      pipeline: {
+        phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
+        current: 2,
+        completion: 30
+      },
+      features: [
+        { label: "Landing page (onsetdj.com)", done: true },
+        { label: "Email capture (Resend)", done: true },
+        { label: "Core DJ lessons (Web Audio API)", done: true },
+        { label: "MIDI controller support", done: true },
+        { label: "Vercel Analytics", done: true },
+        { label: "User authentication (Supabase)", done: false },
+        { label: "Cross-device progress sync", done: false },
+        { label: "Payment/subscription flow", done: false },
+        { label: "Demo video", done: false },
+        { label: "Product analytics (user-level)", done: false }
+      ],
+      deployment: {
+        frontend: { platform: "Vercel", url: "https://onsetdj.com" },
+        backend:  { platform: "N/A", url: null },
+        lastDeploy: "Mar 25, 2026",
+        autoDeploy: true
+      },
+      tasks: [
+        { rank: 1, action: "Wire up Supabase auth", effort: "2–3 hours", impact: "High" },
+        { rank: 2, action: "Build payment flow", effort: "1–2 days", impact: "High" }
+      ],
+      stack: ["Vanilla JS", "Vite", "Web Audio API", "Supabase", "Resend", "Vercel"]
     },
     {
       id: "polititrack",
       name: "PolitiTrack",
+      tag: "Congress Transparency Tool",
+      color: "#22c55e",
       status: "live",
       statusLabel: "Live",
       note: "Live at polititrack-chi.vercel.app",
+      url: "https://polititrack-chi.vercel.app",
       mrr: 0,
       users: null,
       usersKnown: false,
       analytics: true,
-      analyticsLabel: "Vercel Analytics"
+      analyticsLabel: "Vercel Analytics",
+      pipeline: {
+        phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
+        current: 2,
+        completion: 20
+      },
+      features: [
+        { label: "Congress member profiles", done: true },
+        { label: "Senate voting records", done: true },
+        { label: "Bill tracking", done: true },
+        { label: "Vercel Analytics", done: true },
+        { label: "Auto-deploy from main", done: true },
+        { label: "House voting records", done: false },
+        { label: "Complete FEC financial data", done: false },
+        { label: "Fix localhost in SITE_URL", done: false },
+        { label: "Monetization strategy", done: false },
+        { label: "API key rotation (security)", done: false }
+      ],
+      deployment: {
+        frontend: { platform: "Vercel", url: "https://polititrack-chi.vercel.app" },
+        backend:  { platform: "N/A", url: null },
+        lastDeploy: "Mar 25, 2026",
+        autoDeploy: true
+      },
+      tasks: [
+        { rank: 1, action: "Fix localhost in NEXT_PUBLIC_SITE_URL", effort: "5 min", impact: "High" },
+        { rank: 2, action: "Rotate exposed API keys on Congress.gov and OpenFEC", effort: "15 min", impact: "Critical" }
+      ],
+      stack: ["Next.js 16", "React 19", "TypeScript", "Congress.gov API", "OpenFEC API", "Vercel"]
     },
     {
       id: "sdr-copilot",
       name: "SDR Copilot",
+      tag: "AI Cold Call Coaching",
+      color: "#f97316",
       status: "not-ready",
       statusLabel: "Not Ready",
       note: "OAuth placeholder, audio broken, not published.",
+      url: null,
       mrr: 0,
       users: 0,
       usersKnown: true,
       analytics: false,
-      analyticsLabel: "No analytics"
+      analyticsLabel: "No analytics",
+      pipeline: {
+        phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
+        current: 1,
+        completion: 40
+      },
+      features: [
+        { label: "Chrome extension scaffold (MV3)", done: true },
+        { label: "Deepgram transcription integration", done: true },
+        { label: "Demo mode working", done: true },
+        { label: "GitHub repo (v1.1.0)", done: true },
+        { label: "Real-time audio relay (broken)", done: false },
+        { label: "Google OAuth (placeholder)", done: false },
+        { label: "Gmail draft integration", done: false },
+        { label: "Salesforce integration", done: false },
+        { label: "Chrome Web Store publish", done: false },
+        { label: "Analytics/telemetry", done: false }
+      ],
+      deployment: {
+        frontend: { platform: "Not deployed", url: null },
+        backend:  { platform: "N/A", url: null },
+        lastDeploy: null,
+        autoDeploy: false
+      },
+      tasks: [
+        { rank: 1, action: "Fix OAuth + manifest + audio relay", effort: "2–3 weeks", impact: "High" },
+        { rank: 2, action: "Test against real Orum account + submit to Chrome Web Store", effort: "3 hours", impact: "Medium" }
+      ],
+      stack: ["Chrome MV3", "Deepgram", "Google OAuth", "Vanilla JS"]
     }
   ],
 
   priorityQueue: [
-    { rank: 1, project: "Trackr",      task: "Set production env vars in Vercel + Railway",  time: "1 hour",    needsApproval: false },
-    { rank: 2, project: "Trackr",      task: "Get correct Stripe price ID (price_xxx format)", time: "30 min",   needsApproval: false },
-    { rank: 3, project: "Trackr",      task: "Switch Stripe to live mode",                    time: "15 min",    needsApproval: true  },
-    { rank: 4, project: "Trackr",      task: "Deploy and verify with QA",                     time: "30 min",    needsApproval: true  },
-    { rank: 5, project: "PolitiTrack", task: "Fix localhost in NEXT_PUBLIC_SITE_URL",          time: "5 min",     needsApproval: false },
-    { rank: 6, project: "Onset",       task: "Wire up Supabase auth",                         time: "2–3 hours", needsApproval: false },
-    { rank: 7, project: "Onset",       task: "Build payment flow",                            time: "1–2 days",  needsApproval: false },
-    { rank: 8, project: "SDR Copilot", task: "Fix OAuth + manifest + audio relay",            time: "2–3 weeks", needsApproval: false }
+    { rank: 1, project: "Trackr",      task: "Set production env vars in Vercel + Railway",          time: "1 hour",    needsApproval: false },
+    { rank: 2, project: "Trackr",      task: "Get correct Stripe price ID (price_xxx format)",       time: "30 min",    needsApproval: false },
+    { rank: 3, project: "Trackr",      task: "Switch Stripe to live mode",                           time: "15 min",    needsApproval: true  },
+    { rank: 4, project: "Trackr",      task: "Deploy and verify with QA",                            time: "30 min",    needsApproval: true  },
+    { rank: 5, project: "PolitiTrack", task: "Fix localhost in NEXT_PUBLIC_SITE_URL",                time: "5 min",     needsApproval: false },
+    { rank: 6, project: "Onset",       task: "Wire up Supabase auth",                               time: "2–3 hours", needsApproval: false },
+    { rank: 7, project: "Onset",       task: "Build payment flow",                                   time: "1–2 days",  needsApproval: false },
+    { rank: 8, project: "SDR Copilot", task: "Fix OAuth + manifest + audio relay",                   time: "2–3 weeks", needsApproval: false }
   ],
 
   recentUpdates: [
@@ -518,10 +1074,12 @@ const DATA = {
   <div class="header-date" id="hDate"></div>
 </header>
 
+<!-- MAIN DASHBOARD VIEW -->
+<div id="main-view" class="view-visible">
 <main>
 
   <section>
-    <div class="section-label">Portfolio Pulse</div>
+    <div class="section-label">Portfolio Pulse — <span style="font-weight:400;text-transform:none;letter-spacing:0">click a project to explore</span></div>
     <div class="project-grid" id="projectGrid"></div>
   </section>
 
@@ -547,6 +1105,10 @@ const DATA = {
   </section>
 
 </main>
+</div>
+
+<!-- DETAIL VIEW -->
+<div id="detail-view" class="view-hidden"></div>
 
 <footer id="footer"></footer>
 
@@ -554,21 +1116,32 @@ const DATA = {
 (function () {
   const { meta, projects, priorityQueue, recentUpdates, keyDecisions, stats } = DATA;
 
+  // Build slug → project map for router
+  const projectMap = {};
+  projects.forEach(p => { projectMap[p.id] = p; });
+
   document.getElementById('hTitle').textContent = meta.title;
   document.getElementById('hSubtitle').textContent = meta.subtitle;
   document.getElementById('hDate').textContent = meta.lastUpdated;
 
-  // Portfolio pulse
+  // ── PORTFOLIO PULSE ──────────────────────────
   const grid = document.getElementById('projectGrid');
   projects.forEach(p => {
     const usersVal = p.usersKnown ? (p.users === 0 ? '0' : p.users.toLocaleString()) : '—';
     const usersClass = !p.usersKnown ? 'unknown' : p.users === 0 ? 'zero' : '';
     const card = document.createElement('div');
     card.className = `project-card status-${p.status}`;
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.onclick = () => { location.hash = '#/' + p.id; };
+    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') location.hash = '#/' + p.id; };
     card.innerHTML = `
       <div class="card-top">
         <div class="project-name">${p.name}</div>
-        <div class="status-badge badge-${p.status}">${p.statusLabel}</div>
+        <div class="card-top-right">
+          <div class="status-badge badge-${p.status}">${p.statusLabel}</div>
+          <span class="arrow-indicator">→</span>
+        </div>
       </div>
       <div class="project-note">${p.note}</div>
       <div class="project-metrics">
@@ -589,7 +1162,7 @@ const DATA = {
     grid.appendChild(card);
   });
 
-  // Stats
+  // ── STATS ────────────────────────────────────
   const statsRow = document.getElementById('statsRow');
   [
     { value: `$${stats.totalMRR}`, label: 'Total MRR' },
@@ -603,7 +1176,7 @@ const DATA = {
     statsRow.appendChild(el);
   });
 
-  // Priority queue
+  // ── PRIORITY QUEUE ───────────────────────────
   const queueList = document.getElementById('queueList');
   priorityQueue.forEach(item => {
     const el = document.createElement('div');
@@ -623,7 +1196,7 @@ const DATA = {
     queueList.appendChild(el);
   });
 
-  // Decisions
+  // ── KEY DECISIONS ────────────────────────────
   const decisionsList = document.getElementById('decisionsList');
   keyDecisions.forEach(d => {
     const el = document.createElement('div');
@@ -632,7 +1205,7 @@ const DATA = {
     decisionsList.appendChild(el);
   });
 
-  // Updates
+  // ── RECENT UPDATES ───────────────────────────
   const updatesList = document.getElementById('updatesList');
   recentUpdates.forEach(u => {
     const el = document.createElement('div');
@@ -643,6 +1216,185 @@ const DATA = {
 
   document.getElementById('footer').textContent =
     `Mission Control · ${meta.lastUpdated} · willyd248`;
+
+  // ── DETAIL RENDERER ──────────────────────────
+  function impactClass(impact) {
+    const i = impact.toLowerCase();
+    if (i === 'critical') return 'impact-critical';
+    if (i === 'high')     return 'impact-high';
+    return 'impact-medium';
+  }
+
+  function renderDetail(proj) {
+    const doneCount  = proj.features.filter(f => f.done).length;
+    const totalCount = proj.features.length;
+    const pct        = Math.round((doneCount / totalCount) * 100);
+
+    const pipelineHTML = proj.pipeline.phases.map((phase, i) => {
+      const cls = i < proj.pipeline.current ? 'past'
+                : i === proj.pipeline.current ? 'current' : '';
+      const check = i < proj.pipeline.current ? ' ✓' : '';
+      const bar   = i === proj.pipeline.current
+        ? `<div class="phase-progress"><div class="phase-progress-fill" style="width:${proj.pipeline.completion}%"></div></div>`
+        : '';
+      return `<div class="pipeline-phase ${cls}">
+        <div class="phase-num">Phase ${i + 1}</div>
+        <div>${phase}${check}</div>
+        ${bar}
+      </div>`;
+    }).join('');
+
+    const featuresHTML = proj.features.map(f =>
+      `<div class="feature-item ${f.done ? 'done' : 'todo'}">
+        <div class="check-icon ${f.done ? 'done' : 'todo'}">${f.done ? '✓' : ''}</div>
+        <span>${f.label}</span>
+      </div>`
+    ).join('');
+
+    const dep = proj.deployment;
+    const deployHTML = `
+      <div class="deploy-item">
+        <div class="deploy-label">Frontend</div>
+        <div class="deploy-value">${dep.frontend.platform}</div>
+        ${dep.frontend.url ? `<a href="${dep.frontend.url}" target="_blank" class="deploy-link">${dep.frontend.url}</a>` : ''}
+      </div>
+      <div class="deploy-item">
+        <div class="deploy-label">Backend</div>
+        <div class="deploy-value">${dep.backend.platform}</div>
+        ${dep.backend.url ? `<a href="${dep.backend.url}" target="_blank" class="deploy-link">${dep.backend.url}</a>` : ''}
+      </div>
+      <div class="deploy-item">
+        <div class="deploy-label">Last Deploy</div>
+        <div class="deploy-value">${dep.lastDeploy || '—'}</div>
+      </div>
+      <div class="deploy-item">
+        <div class="deploy-label">Auto-Deploy</div>
+        <div class="deploy-value" style="color:${dep.autoDeploy ? 'var(--green)' : 'var(--text-muted)'}">
+          ${dep.autoDeploy ? 'Yes (GitHub → Vercel)' : 'No'}
+        </div>
+      </div>`;
+
+    const tasksHTML = proj.tasks.length
+      ? proj.tasks.map(t => `
+        <div class="detail-queue-item">
+          <div class="detail-queue-rank">${t.rank}</div>
+          <div class="detail-queue-body">
+            <div class="detail-queue-title">${t.action}</div>
+            <div class="detail-queue-meta">⏱ ${t.effort}</div>
+          </div>
+          <span class="impact-tag ${impactClass(t.impact)}">${t.impact}</span>
+        </div>`).join('')
+      : `<div class="detail-queue-item"><div style="color:var(--text-muted);font-size:13px">No tasks queued.</div></div>`;
+
+    const usersDisplay = proj.usersKnown
+      ? (proj.users === 0 ? '0' : proj.users.toLocaleString())
+      : '—';
+
+    const analyticsDisplay = proj.analytics ? proj.analyticsLabel : 'None';
+
+    const stackHTML = proj.stack.map(s => `<span class="stack-tag">${s}</span>`).join('');
+
+    // Status display
+    const statusColorMap = { live: 'var(--green)', almost: 'var(--yellow)', 'not-ready': 'var(--red)' };
+    const statusColor = statusColorMap[proj.status] || 'var(--text-muted)';
+
+    document.getElementById('detail-view').innerHTML = `
+      <div class="detail-header">
+        <button class="back-btn" onclick="location.hash=''">← Back</button>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex:1">
+          <span style="width:4px;height:32px;border-radius:2px;background:${proj.color};display:inline-block;flex-shrink:0"></span>
+          <span class="detail-title">${proj.name}</span>
+          <span class="detail-tag">${proj.tag}</span>
+          <span class="detail-status-badge" style="background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}55">${proj.statusLabel}</span>
+          ${proj.url ? `<a href="${proj.url}" target="_blank" class="detail-live-link" style="background:${proj.color}18;color:${proj.color};border:1px solid ${proj.color}44">↗ ${proj.url.replace('https://', '')}</a>` : ''}
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width:${pct}%;background:${proj.color}"></div>
+        </div>
+        <div class="progress-bar-label" style="color:${proj.color}">${pct}% complete (${doneCount}/${totalCount} features)</div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Build Pipeline</div>
+        <div class="pipeline">${pipelineHTML}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px">
+          Currently in Phase ${proj.pipeline.current + 1}: <strong style="color:${proj.color}">${proj.pipeline.phases[proj.pipeline.current]}</strong> — ${proj.pipeline.completion}% complete
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Feature Checklist</div>
+        <div class="feature-list">${featuresHTML}</div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Deployment Info</div>
+        <div class="deploy-grid">${deployHTML}</div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Task Queue</div>
+        <div class="detail-queue">${tasksHTML}</div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Revenue &amp; Users</div>
+        <div class="rev-row">
+          <div class="rev-item">
+            <div class="rev-label">MRR</div>
+            <div class="rev-value">$${proj.mrr}</div>
+          </div>
+          <div class="rev-item">
+            <div class="rev-label">Users</div>
+            <div class="rev-value">${usersDisplay}</div>
+          </div>
+          <div class="rev-item">
+            <div class="rev-label">Analytics</div>
+            <div style="margin-top:8px;font-size:13px;font-weight:600;color:${proj.analytics ? 'var(--green)' : 'var(--text-muted)'}">${analyticsDisplay}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-label">Tech Stack</div>
+        <div class="stack-list">${stackHTML}</div>
+      </div>
+    `;
+  }
+
+  // ── ROUTER ───────────────────────────────────
+  const mainView   = document.getElementById('main-view');
+  const detailView = document.getElementById('detail-view');
+
+  function navigate() {
+    const hash = location.hash;
+    if (hash && hash.startsWith('#/')) {
+      const slug = hash.slice(2);
+      const proj = projectMap[slug];
+      if (proj) {
+        renderDetail(proj);
+        mainView.classList.remove('view-visible');
+        mainView.classList.add('view-hidden');
+        detailView.classList.remove('view-hidden');
+        detailView.classList.add('view-visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.title = `${proj.name} — Mission Control`;
+        return;
+      }
+    }
+    // Back to dashboard
+    detailView.classList.remove('view-visible');
+    detailView.classList.add('view-hidden');
+    mainView.classList.remove('view-hidden');
+    mainView.classList.add('view-visible');
+    document.title = 'Mission Control v3';
+  }
+
+  window.addEventListener('hashchange', navigate);
+  navigate();
 })();
 </script>
 
