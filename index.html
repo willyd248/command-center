@@ -844,7 +844,7 @@ const DATA = {
   meta: {
     title: "Mission Control",
     subtitle: "Portfolio Command Center v3",
-    lastUpdated: "2026-03-26"
+    lastUpdated: "2026-03-30"
   },
 
   projects: [
@@ -855,8 +855,8 @@ const DATA = {
       color: "#6366f1",
       status: "live",
       statusLabel: "Live",
-      note: "Live at trackr-ivfg.vercel.app. Stripe checkout working.",
-      url: "https://trackr-ivfg.vercel.app",
+      note: "Live at trackrjobs.com. Stripe live mode active. Dev login deployed. UX audit in progress. Marketing Day 1 posts scheduled Mar 31.",
+      url: "https://trackrjobs.com",
       mrr: 0,
       users: 0,
       usersKnown: true,
@@ -864,8 +864,8 @@ const DATA = {
       analyticsLabel: "No analytics",
       pipeline: {
         phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
-        current: 1,
-        completion: 75
+        current: 2,
+        completion: 85
       },
       features: [
         { label: "User authentication (Clerk)", done: true },
@@ -874,22 +874,23 @@ const DATA = {
         { label: "Stripe payment integration", done: true },
         { label: "Chrome extension built", done: true },
         { label: "Production env vars configured", done: true },
-        { label: "Stripe live mode (test mode only)", done: false },
+        { label: "Stripe live mode + live keys", done: true },
+        { label: "Dev login (dimaiowill@gmail.com bypass)", done: true },
+        { label: "UX conversion audit", done: false },
         { label: "Analytics integration", done: false },
-        { label: "Chrome extension tested & published", done: false },
-        { label: "CI/CD pipeline", done: false }
+        { label: "Chrome extension tested & published", done: false }
       ],
       deployment: {
-        frontend: { platform: "Vercel", url: "https://trackr-ivfg.vercel.app" },
+        frontend: { platform: "Vercel", url: "https://trackrjobs.com" },
         backend:  { platform: "Railway", url: null },
-        lastDeploy: "Mar 25, 2026",
+        lastDeploy: "Mar 30, 2026",
         autoDeploy: true
       },
       tasks: [
-        { rank: 1, action: "Set production env vars on Railway (CORS_ORIGIN, GOOGLE_REDIRECT_URI)", effort: "30 min", impact: "Critical" },
-        { rank: 2, action: "Get correct Stripe price ID (price_xxx format)", effort: "30 min", impact: "High" },
-        { rank: 3, action: "Switch Stripe to live mode", effort: "15 min", impact: "High" },
-        { rank: 4, action: "Deploy and verify with QA", effort: "30 min", impact: "High" }
+        { rank: 1, action: "Complete UX audit — identify and fix top conversion blockers", effort: "2–3 hours", impact: "High" },
+        { rank: 2, action: "Post Marketing Day 1 content (scheduled Mar 31)", effort: "—", impact: "High" },
+        { rank: 3, action: "Add analytics (PostHog or similar)", effort: "1 hour", impact: "Medium" },
+        { rank: 4, action: "Test and publish Chrome extension", effort: "1 day", impact: "Medium" }
       ],
       stack: ["React", "Express", "Neon Postgres", "Clerk Auth", "Stripe", "Railway", "Vercel"]
     },
@@ -900,7 +901,7 @@ const DATA = {
       color: "#a855f7",
       status: "almost",
       statusLabel: "Almost",
-      note: "Live at onsetdj.com. No auth or payments.",
+      note: "CRITICAL: Vercel has ZERO env vars — Supabase auth broken in prod, email signups 500ing. UI overhaul in progress. Marketing Day 1 scheduled Mar 31.",
       url: "https://onsetdj.com",
       mrr: 0,
       users: null,
@@ -909,32 +910,41 @@ const DATA = {
       analyticsLabel: "Vercel Analytics",
       pipeline: {
         phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
-        current: 2,
-        completion: 30
+        current: 1,
+        completion: 45
       },
       features: [
         { label: "Landing page (onsetdj.com)", done: true },
-        { label: "Email capture (Resend)", done: true },
         { label: "Core DJ lessons (Web Audio API)", done: true },
         { label: "MIDI controller support", done: true },
         { label: "Vercel Analytics", done: true },
+        { label: "Dev login (?dev=dk_onset_will_9f3k)", done: true },
+        { label: "UI improvements deployed (demo CTA, streak, MIDI badge)", done: true },
+        { label: "Audio engine Phase 1 architecture doc", done: true },
+        { label: "Add Vercel env vars (Supabase URL + anon key)", done: false },
+        { label: "Add Vercel env vars (Resend API key + audience ID)", done: false },
+        { label: "Replace Stripe Payment Link placeholder", done: false },
+        { label: "MAJOR UI overhaul (Stitch design system)", done: false },
         { label: "User authentication (Supabase)", done: false },
         { label: "Cross-device progress sync", done: false },
-        { label: "Payment/subscription flow", done: false },
-        { label: "Demo video", done: false },
-        { label: "Product analytics (user-level)", done: false }
+        { label: "Audio engine Phase 1 implementation", done: false },
+        { label: "Demo video", done: false }
       ],
       deployment: {
         frontend: { platform: "Vercel", url: "https://onsetdj.com" },
         backend:  { platform: "N/A", url: null },
-        lastDeploy: "Mar 25, 2026",
+        lastDeploy: "Mar 30, 2026",
         autoDeploy: true
       },
       tasks: [
-        { rank: 1, action: "Wire up Supabase auth", effort: "2–3 hours", impact: "High" },
-        { rank: 2, action: "Build payment flow", effort: "1–2 days", impact: "High" }
+        { rank: 1, action: "Add Supabase URL + anon key to Vercel env vars (auth broken in prod)", effort: "10 min", impact: "Critical" },
+        { rank: 2, action: "Add Resend API key + audience ID to Vercel env vars (signups 500ing)", effort: "10 min", impact: "Critical" },
+        { rank: 3, action: "Replace Stripe Payment Link placeholder on landing page", effort: "15 min", impact: "Critical" },
+        { rank: 4, action: "Complete MAJOR UI overhaul (Stitch design system — loading, transitions, empty states)", effort: "2–3 days", impact: "High" },
+        { rank: 5, action: "Post Marketing Day 1 content (scheduled Mar 31)", effort: "—", impact: "High" },
+        { rank: 6, action: "Implement audio engine Phase 1", effort: "1 week", impact: "High" }
       ],
-      stack: ["Vanilla JS", "Vite", "Web Audio API", "Supabase", "Resend", "Vercel"]
+      stack: ["Vanilla JS", "Vite", "Web Audio API", "Supabase", "Resend", "Stripe", "Vercel"]
     },
     {
       id: "polititrack",
@@ -943,8 +953,8 @@ const DATA = {
       color: "#22c55e",
       status: "live",
       statusLabel: "Live",
-      note: "Live at polititrack-chi.vercel.app",
-      url: "https://polititrack-chi.vercel.app",
+      note: "Live at polititrack.vercel.app. Buy Me a Coffee + newsletter live. Email storage is ephemeral (/tmp) — not persisted. Not targeting revenue.",
+      url: "https://polititrack.vercel.app",
       mrr: 0,
       users: null,
       usersKnown: false,
@@ -953,7 +963,7 @@ const DATA = {
       pipeline: {
         phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
         current: 2,
-        completion: 20
+        completion: 25
       },
       features: [
         { label: "Congress member profiles", done: true },
@@ -961,21 +971,21 @@ const DATA = {
         { label: "Bill tracking", done: true },
         { label: "Vercel Analytics", done: true },
         { label: "Auto-deploy from main", done: true },
+        { label: "Buy Me a Coffee link", done: true },
+        { label: "Newsletter signup (ephemeral storage)", done: true },
+        { label: "Newsletter email storage (Resend integration)", done: false },
         { label: "House voting records", done: false },
         { label: "Complete FEC financial data", done: false },
-        { label: "Fix localhost in SITE_URL", done: false },
-        { label: "Monetization strategy", done: false },
-        { label: "API key rotation (security)", done: false }
+        { label: "Monetization strategy", done: false }
       ],
       deployment: {
-        frontend: { platform: "Vercel", url: "https://polititrack-chi.vercel.app" },
+        frontend: { platform: "Vercel", url: "https://polititrack.vercel.app" },
         backend:  { platform: "N/A", url: null },
-        lastDeploy: "Mar 25, 2026",
+        lastDeploy: "Mar 26, 2026",
         autoDeploy: true
       },
       tasks: [
-        { rank: 1, action: "Fix localhost in NEXT_PUBLIC_SITE_URL", effort: "5 min", impact: "High" },
-        { rank: 2, action: "Rotate exposed API keys on Congress.gov and OpenFEC", effort: "15 min", impact: "Critical" }
+        { rank: 1, action: "Replace ephemeral /tmp email storage with Resend integration", effort: "1–2 hours", impact: "High" }
       ],
       stack: ["Next.js 16", "React 19", "TypeScript", "Congress.gov API", "OpenFEC API", "Vercel"]
     },
@@ -986,7 +996,7 @@ const DATA = {
       color: "#f97316",
       status: "not-ready",
       statusLabel: "Not Ready",
-      note: "OAuth placeholder, audio broken, not published.",
+      note: "Audio relay bug fixed. Google OAuth client ID still placeholder in manifest.json. ~1 day of focused work to Chrome Web Store submission.",
       url: null,
       mrr: 0,
       users: 0,
@@ -996,15 +1006,15 @@ const DATA = {
       pipeline: {
         phases: ["Validate", "Build MVP", "Launch & Measure", "Scale or Kill"],
         current: 1,
-        completion: 40
+        completion: 55
       },
       features: [
         { label: "Chrome extension scaffold (MV3)", done: true },
         { label: "Deepgram transcription integration", done: true },
         { label: "Demo mode working", done: true },
         { label: "GitHub repo (v1.1.0)", done: true },
-        { label: "Real-time audio relay (broken)", done: false },
-        { label: "Google OAuth (placeholder)", done: false },
+        { label: "Audio relay bug fixed (double-capture of streamId)", done: true },
+        { label: "Google OAuth client ID (still placeholder)", done: false },
         { label: "Gmail draft integration", done: false },
         { label: "Salesforce integration", done: false },
         { label: "Chrome Web Store publish", done: false },
@@ -1017,47 +1027,48 @@ const DATA = {
         autoDeploy: false
       },
       tasks: [
-        { rank: 1, action: "Fix OAuth + manifest + audio relay", effort: "2–3 weeks", impact: "High" },
-        { rank: 2, action: "Test against real Orum account + submit to Chrome Web Store", effort: "3 hours", impact: "Medium" }
+        { rank: 1, action: "Replace Google OAuth client ID placeholder in manifest.json", effort: "30 min", impact: "Critical" },
+        { rank: 2, action: "Submit to Chrome Web Store", effort: "2–3 hours", impact: "High" }
       ],
       stack: ["Chrome MV3", "Deepgram", "Google OAuth", "Vanilla JS"]
     }
   ],
 
   priorityQueue: [
-    { rank: 1, project: "Trackr",      task: "Run QA on Stripe checkout flow",                       time: "30 min",    needsApproval: true  },
-    { rank: 2, project: "Trackr",      task: "Switch Clerk to live keys",                            time: "15 min",    needsApproval: true  },
-    { rank: 3, project: "Trackr",      task: "Switch Stripe to live mode",                           time: "15 min",    needsApproval: true  },
-    { rank: 4, project: "Trackr",      task: "Add analytics (PostHog or similar)",                   time: "1 hour",    needsApproval: false },
-    { rank: 5, project: "Onset",       task: "Wire up Supabase auth",                               time: "2–3 hours", needsApproval: false },
-    { rank: 6, project: "Onset",       task: "Build payment flow",                                   time: "1–2 days",  needsApproval: false },
-    { rank: 7, project: "SDR Copilot", task: "Fix OAuth + manifest + audio relay",                   time: "2–3 weeks", needsApproval: false }
+    { rank: 1, project: "Onset",       task: "Add Supabase URL + anon key to Vercel env vars (auth broken in prod)",  time: "10 min",    needsApproval: true  },
+    { rank: 2, project: "Onset",       task: "Add Resend API key + audience ID to Vercel env vars (signups 500ing)",   time: "10 min",    needsApproval: true  },
+    { rank: 3, project: "Onset",       task: "Replace Stripe Payment Link placeholder on landing page",                time: "15 min",    needsApproval: true  },
+    { rank: 4, project: "Trackr",      task: "Complete UX audit — fix top conversion blockers",                        time: "2–3 hours", needsApproval: false },
+    { rank: 5, project: "Trackr",      task: "Post Marketing Day 1 content (Mar 31)",                                  time: "—",         needsApproval: false },
+    { rank: 6, project: "Onset",       task: "Post Marketing Day 1 content (Mar 31)",                                  time: "—",         needsApproval: false },
+    { rank: 7, project: "PolitiTrack", task: "Replace ephemeral /tmp email storage with Resend",                       time: "1–2 hours", needsApproval: false },
+    { rank: 8, project: "Onset",       task: "Complete MAJOR UI overhaul (Stitch design system)",                      time: "2–3 days",  needsApproval: false },
+    { rank: 9, project: "SDR Copilot", task: "Replace Google OAuth placeholder + submit to Chrome Web Store",          time: "~1 day",    needsApproval: false }
   ],
 
   recentUpdates: [
-    "Trackr production env vars configured on Vercel + Railway",
-    "DB migration run — stripe_subscriptions table created",
-    "Stripe price ID fixed on trackr-ivfg deployment",
-    "49 stale branches cleaned across all repos",
-    "PolitiTrack localhost fix merged to main",
-    "PolitiTrack data bugs identified and fixed (bill summaries, politician metrics)",
-    "Mar 26 daily ops: all deployments healthy ✅ onsetdj.com, app.onsetdj.com, polititrack-chi.vercel.app all 200 OK",
-    "Mar 26 daily ops: worktree bloat — Trackr 20, Onset 14, PolitiTrack 10, SDR Copilot 4. Pruned stale refs.",
-    "Mar 26 daily ops: no new commits in last 24h — all 4 projects idle since Mar 25",
-    "Mar 26 daily ops: stale branches — Trackr 19, Onset 21, PolitiTrack 14, SDR Copilot 3",
-    "Trackr production config fixed (CORS, OAuth, Stripe URLs)",
-    "DEPLOY.md created with full deployment guide",
-    "Launch readiness audit completed across all 4 projects",
-    "Stripe integration built for Trackr",
-    "Landing page shipped for Onset at onsetdj.com",
-    "Legal docs deployed to all repos"
+    "Mar 30: Trackr — Stripe live mode configured and working (live keys, webhook, price ID all set)",
+    "Mar 30: Trackr — dev login deployed (dimaiowill@gmail.com bypasses subscription, /dev debug page)",
+    "Mar 30: Trackr — UX audit started, identifying top conversion issues",
+    "Mar 30: Trackr + Onset — Marketing Day 1 posts scheduled for March 31",
+    "Mar 30: Onset — UI improvements deployed (demo CTA, softer MIDI badge, upgrade CTA, streak polish)",
+    "Mar 30: Onset — MAJOR UI overhaul in progress (Stitch design system — loading, transitions, empty states)",
+    "Mar 30: Onset — CRITICAL: Vercel has zero env vars — Supabase auth broken in prod, email signups 500ing",
+    "Mar 30: Onset — audio engine Phase 1 architecture doc complete, implementation not started",
+    "Mar 30: SDR Copilot — audio relay bug fixed (double-capture of streamId resolved)",
+    "Mar 26: daily ops — all deployments healthy, worktree bloat pruned",
+    "Mar 26: Trackr — production env vars configured on Vercel + Railway",
+    "Mar 26: DB migration run — stripe_subscriptions table created",
+    "Mar 26: 49 stale branches cleaned across all repos",
+    "Mar 26: PolitiTrack — localhost fix merged to main, data bugs fixed"
   ],
 
   keyDecisions: [
-    "Choose Stripe pricing for Trackr — currently $9/mo test mode, switch to live?",
-    "Switch Clerk to live keys for Trackr",
-    "Disable Vercel deployment protection on command-center",
-    "Onset monetization strategy — freemium or subscription?"
+    "Onset: add Supabase + Resend env vars to Vercel ASAP (auth + email broken in prod)",
+    "Onset: replace Stripe Payment Link placeholder before any paid marketing",
+    "Onset: Stitch UI overhaul scope — how much polish before Day 1 launch?",
+    "Trackr: add analytics before or after first revenue?",
+    "SDR Copilot: deprioritized until Trackr + Onset are generating revenue — confirm?"
   ],
 
   stats: {
